@@ -1,0 +1,2 @@
+{"timestamp":"00:07:39.471","source":"Browser","level":"ERROR","message":"Failed to fetch RSC payload for http://localhost:3000/test. Falling back to browser navigation. {}"}
+{"timestamp":"00:15:23.792","source":"Server","level":"LOG","message":"  Reload env: .env.local"}
