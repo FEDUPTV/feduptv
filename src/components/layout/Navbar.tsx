@@ -26,10 +26,7 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-8 font-semibold uppercase text-white">
           <Link href="/">Home</Link>
-          <Link href="/apply">Audition</Link>
-          <Link href="/sponsors">Sponsors</Link>
-          <Link href="/resources">Resources</Link>
-          <Link href="/contact">Contact</Link>
+          <div className="group relative"><button className="uppercase">Audition</button><div className="invisible absolute left-0 top-full mt-2 w-56 rounded-lg border border-yellow-500/20 bg-zinc-900 opacity-0 transition-all group-hover:visible group-hover:opacity-100"><Link href="/apply" className="block px-4 py-3 hover:bg-black">Apply Now</Link><Link href="/audition" className="block px-4 py-3 hover:bg-black">Audition Details</Link></div></div><Link href="/sponsors">Sponsors</Link><Link href="/resources">Resources</Link><Link href="/contact">Contact</Link>
         </div>
 
         <div className="hidden md:flex items-center gap-4">
@@ -64,9 +61,7 @@ export default function Navbar() {
           <div className="flex flex-col items-center gap-6 py-10 text-xl font-bold text-white">
 
             <Link href="/" onClick={() => setOpen(false)}>HOME</Link>
-            <Link href="/apply" onClick={() => setOpen(false)}>AUDITION</Link>
-            <Link href="/sponsors" onClick={() => setOpen(false)}>SPONSORS</Link>
-            <Link href="/resources" onClick={() => setOpen(false)}>RESOURCES</Link>
+            <Link href="/apply" onClick={() => setOpen(false)}>APPLY NOW</Link><Link href="/audition" onClick={() => setOpen(false)}>AUDITION DETAILS</Link><Link href="/sponsors" onClick={() => setOpen(false)}>SPONSORS</Link><Link href="/resources" onClick={() => setOpen(false)}>RESOURCES</Link>
             <Link href="/contact" onClick={() => setOpen(false)}>CONTACT</Link>
             <Link href="/portal" onClick={() => setOpen(false)}>PORTAL</Link>
 
