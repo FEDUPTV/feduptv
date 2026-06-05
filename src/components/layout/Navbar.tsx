@@ -34,13 +34,13 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-4">
           <a href="https://www.facebook.com/FedUpRealitySeries" target="_blank">
-            <FaFacebookF />
+            <FaFacebookF className="text-[#1877F2] text-lg hover:scale-110 transition-all" />
           </a>
           <a href="https://www.instagram.com/fedddup_" target="_blank">
-            <FaInstagram />
+            <FaInstagram className="text-[#E4405F] text-lg hover:scale-110 transition-all" />
           </a>
           <a href="https://www.youtube.com/@FedUpRealitySeries" target="_blank">
-            <FaYoutube />
+            <FaYoutube className="text-[#FF0000] text-lg hover:scale-110 transition-all" />
           </a>
 
           <Link
@@ -78,9 +78,9 @@ export default function Navbar() {
             </Link>
 
             <div className="mt-4 flex gap-6 text-yellow-500">
-              <FaFacebookF size={24} />
-              <FaInstagram size={24} />
-              <FaYoutube size={24} />
+              <FaFacebookF className="text-[#1877F2]" size={24} />
+              <FaInstagram className="text-[#E4405F]" size={24} />
+              <FaYoutube className="text-[#FF0000]" size={24} />
             </div>
 
           </div>

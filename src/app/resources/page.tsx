@@ -112,9 +112,21 @@ async function loadResources(nextCategory = category) {
         </h1>
 
         <p className="mx-auto mb-8 max-w-3xl text-lg leading-relaxed text-gray-300">
-          Resources for women coming home from jail, prison, halfway houses,
-          treatment programs, or reentry situations.
+          
         </p>
+
+        <div className="mx-auto mb-6 max-w-3xl rounded-xl border border-yellow-500/20 bg-zinc-900 p-5 text-left">
+          <h3 className="mb-3 text-lg font-black text-yellow-500">
+            How It Works
+          </h3>
+
+          <div className="space-y-2 text-gray-300">
+            <p><strong>1.</strong> Select your state and city.</p>
+            <p><strong>2.</strong> Choose the type of assistance you need.</p>
+            <p><strong>3.</strong> Browse resources and connect directly.</p>
+          </div>
+        </div>
+
         
 <div className="mb-8 flex justify-center">
   <div className="rounded-full border border-yellow-500/20 bg-zinc-900 px-6 py-3 text-sm font-bold text-gray-300">
