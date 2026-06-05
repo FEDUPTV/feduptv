@@ -98,6 +98,66 @@ export default function CandidateDetailPage() {
     if (id) loadCandidate();
   }, [id]);
 
+  async function deleteApplicant() {
+    const confirmed = window.confirm(
+      "Delete this applicant permanently? This will remove the database record and uploaded media. This cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/applicants/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to delete applicant.");
+      }
+
+      alert("Applicant deleted.");
+      window.location.href = "/portal";
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete applicant.");
+    }
+  }
+
+  async function banApplicant() {
+    const reason = window.prompt(
+      "Reason for banning this applicant?"
+    );
+
+    if (!reason) return;
+
+    const confirmed = window.confirm(
+      "Ban this applicant? This will block future submissions using this email or phone."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/applicants/${id}/ban`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to ban applicant.");
+      }
+
+      setCandidate(data.applicant);
+      alert("Applicant banned.");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to ban applicant.");
+    }
+  }
+
   async function saveChanges() {
     setSaving(true);
 
@@ -192,6 +252,12 @@ export default function CandidateDetailPage() {
           <p className="mt-3 text-gray-400">
             {applicant.email || "-"} | {applicant.phone || "-"}
           </p>
+
+          {applicant.banned && (
+            <div className="mt-5 inline-block rounded-full bg-red-600 px-5 py-2 text-sm font-black uppercase text-white">
+              BANNED APPLICANT
+            </div>
+          )}
         </div>
 
         <div className="grid gap-6 lg:grid-cols-3">
@@ -364,6 +430,22 @@ export default function CandidateDetailPage() {
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
+
+            <div className="mt-4 grid gap-3">
+              <button
+                onClick={banApplicant}
+                className="w-full rounded-xl border border-red-500 px-6 py-4 font-black text-red-400 hover:bg-red-500 hover:text-white"
+              >
+                Ban Applicant
+              </button>
+
+              <button
+                onClick={deleteApplicant}
+                className="w-full rounded-xl bg-red-700 px-6 py-4 font-black text-white hover:bg-red-600"
+              >
+                Delete Applicant
+              </button>
+            </div>
 
             
             <div className="mt-6 rounded-xl border border-yellow-500/20 bg-black p-5">

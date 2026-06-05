@@ -52,6 +52,10 @@ export async function PATCH(
     .single();
 
 
+  console.log("STATUS CHANGE:", body.status);
+
+  console.log("APPLICANT EMAIL:", data?.email);
+
   const emailTemplate = getStatusEmail(
     body.status,
     data.first_name || "Candidate"
@@ -63,7 +67,8 @@ export async function PATCH(
     process.env.RESEND_API_KEY
   ) {
     try {
-      await resend.emails.send({
+      console.log("SENDING STATUS EMAIL TO:", data.email);
+      const emailResult = await resend.emails.send({
         from:
           process.env.RESEND_FROM_EMAIL ||
           "FEDUP <onboarding@resend.dev>",
@@ -71,6 +76,8 @@ export async function PATCH(
         subject: emailTemplate.subject,
         html: emailTemplate.html,
       });
+
+      console.log("STATUS EMAIL RESULT:", emailResult);
     } catch (e) {
       console.error("Email failed", e);
     }
@@ -85,4 +92,58 @@ export async function PATCH(
   }
 
   return NextResponse.json({ success: true, applicant: data });
+}
+
+
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params;
+
+  const { data: applicant, error: fetchError } = await supabaseAdmin
+    .from("applicants")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !applicant) {
+    return NextResponse.json(
+      { success: false, error: fetchError?.message || "Applicant not found." },
+      { status: 404 }
+    );
+  }
+
+  const urls = [
+    ...(Array.isArray(applicant.photo_urls) ? applicant.photo_urls : []),
+    ...(Array.isArray(applicant.video_urls) ? applicant.video_urls : []),
+  ];
+
+  const filesToDelete = urls
+    .map((url: string) => {
+      const marker = "/storage/v1/object/public/applicants/";
+      const index = url.indexOf(marker);
+      return index >= 0 ? url.slice(index + marker.length) : null;
+    })
+    .filter(Boolean) as string[];
+
+  if (filesToDelete.length) {
+    await supabaseAdmin.storage
+      .from("applicants")
+      .remove(filesToDelete);
+  }
+
+  const { error: deleteError } = await supabaseAdmin
+    .from("applicants")
+    .delete()
+    .eq("id", id);
+
+  if (deleteError) {
+    return NextResponse.json(
+      { success: false, error: deleteError.message },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ success: true });
 }

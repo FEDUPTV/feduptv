@@ -28,23 +28,23 @@ function buildEmail({
 <html>
 <body style="margin:0;padding:0;background:#0a0a0a;font-family:Arial,sans-serif;color:#ffffff;">
 
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:15px 8px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;padding:40px 20px;">
 <tr>
 <td align="center">
 
-<table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#111111;border:1px solid #222;border-radius:18px;overflow:hidden;">
+<table width="650" cellpadding="0" cellspacing="0" style="max-width:650px;background:#111111;border:1px solid #222;border-radius:18px;overflow:hidden;">
 
 <tr>
-<td align="center" style="padding:20px 15px;">
+<td align="center" style="padding:40px 30px 25px;">
 
 <img
 src="${LOGO}"
 alt="FEDUP"
-width="45"
+width="90"
 style="display:block;margin-bottom:20px;"
 />
 
-<h1 style="margin:0;color:#facc15;font-size:26px;font-weight:900;">
+<h1 style="margin:0;color:#facc15;font-size:42px;font-weight:900;">
 FEDUP
 </h1>
 
@@ -62,9 +62,9 @@ style="
 background:#facc15;
 color:#000;
 font-weight:900;
-letter-spacing:1px;
+letter-spacing:2px;
 text-transform:uppercase;
-padding:8px;
+padding:14px;
 "
 >
 Official Casting Communication
@@ -72,20 +72,20 @@ Official Casting Communication
 </tr>
 
 <tr>
-<td style="padding:14px;">
+<td style="padding:40px;">
 
 <h2
 style="
 margin-top:0;
 color:#facc15;
-font-size:24px;
+font-size:38px;
 font-weight:900;
 "
 >
 ${title}
 </h2>
 
-<p style="font-size:16px;">
+<p style="font-size:18px;">
 Hello ${firstName},
 </p>
 
@@ -93,9 +93,9 @@ Hello ${firstName},
 style="
 background:#181818;
 border-left:4px solid #facc15;
-padding:14px;
+padding:20px;
 border-radius:10px;
-margin-bottom:12px;
+margin-bottom:30px;
 "
 >
 <strong style="color:#facc15;">
@@ -104,8 +104,11 @@ Casting Progress
 
 <div style="margin-top:20px;">
 
-<div style="color:#999;font-size:13px;line-height:1.8;margin-bottom:8px;">
-✓ Application &nbsp;&nbsp; • &nbsp;&nbsp; ✓ Review &nbsp;&nbsp; • &nbsp;&nbsp; ✓ Audition &nbsp;&nbsp; • &nbsp;&nbsp; ★ Selected
+<div style="display:flex;justify-content:space-between;color:#999;font-size:12px;margin-bottom:8px;">
+<span>Application</span>
+<span>Review</span>
+<span>Audition</span>
+<span>Selected</span>
 </div>
 
 <div
@@ -131,7 +134,7 @@ background:#facc15;
 
 <div
 style="
-font-size:16px;
+font-size:18px;
 line-height:1.9;
 color:#e5e5e5;
 "
@@ -139,13 +142,13 @@ color:#e5e5e5;
 ${message}
 </div>
 
-<div style="text-align:center;margin-top:18px;">
+<div style="text-align:center;margin-top:35px;">
 <a
 href="https://feduptv.com"
 style="
 background:#facc15;
 color:#000;
-padding:10px 18px;
+padding:16px 30px;
 border-radius:999px;
 text-decoration:none;
 font-weight:900;
@@ -158,14 +161,14 @@ Visit FEDUP
 
 <div
 style="
-margin-top:18px;
-padding:8px;
+margin-top:35px;
+padding:24px;
 background:#181818;
 border-radius:12px;
 "
 >
 <h3 style="margin-top:0;color:#facc15;">
-Your Casting Journey
+What's Next?
 </h3>
 
 ${nextSteps}
@@ -173,8 +176,8 @@ ${nextSteps}
 
 <div
 style="
-margin-top:18px;
-padding:8px;
+margin-top:35px;
+padding:24px;
 background:#181818;
 border-radius:12px;
 "
@@ -191,8 +194,8 @@ Every application is personally reviewed by our production team.
 
 <div
 style="
-margin-top:18px;
-padding:8px;
+margin-top:35px;
+padding:24px;
 background:#181818;
 border-radius:12px;
 "
@@ -208,8 +211,8 @@ Simply reply to this email and a member of our casting team will assist you.
 
 <div
 style="
-margin-top:18px;
-padding:8px;
+margin-top:35px;
+padding:24px;
 background:#181818;
 border-radius:12px;
 text-align:center;
@@ -225,15 +228,15 @@ Follow the journey and stay connected with FEDUP.
 </p>
 
 <a href="${INSTAGRAM}" style="margin:0 8px;">
-<img src="https://feduptv.com/images/email/instagram.png" width="36" alt="Instagram">
+<img src="https://feduptv.com/images/email/instagram.svg" width="36" alt="Instagram">
 </a>
 
 <a href="${FACEBOOK}" style="margin:0 8px;">
-<img src="https://feduptv.com/images/email/facebook.png" width="36" alt="Facebook">
+<img src="https://feduptv.com/images/email/facebook.svg" width="36" alt="Facebook">
 </a>
 
 <a href="${YOUTUBE}" style="margin:0 8px;">
-<img src="https://feduptv.com/images/email/youtube.png" width="36" alt="YouTube">
+<img src="https://feduptv.com/images/email/youtube.svg" width="36" alt="YouTube">
 </a>
 
 </div>
@@ -245,10 +248,10 @@ Follow the journey and stay connected with FEDUP.
 <td
 align="center"
 style="
-padding:18px;
+padding:30px;
 background:#0d0d0d;
 color:#888;
-font-size:12px;
+font-size:13px;
 "
 >
 FEDUP Reality Series<br>
@@ -310,7 +313,7 @@ export function getStatusEmail(
           `,
           nextSteps: `
             <ul>
-              <li>Your producer will contact you shortly.</li>
+              <li>Producer Contact</li>
               <li>Audition Interview</li>
               <li>Final Review</li>
             </ul>
@@ -332,7 +335,7 @@ export function getStatusEmail(
           `,
           nextSteps: `
             <ul>
-              <li>You are among a limited group advancing.</li>
+              <li>Production Review</li>
               <li>Scheduling</li>
               <li>Show Preparation</li>
             </ul>
@@ -354,8 +357,8 @@ export function getStatusEmail(
           `,
           nextSteps: `
             <ul>
-              <li>We appreciate the opportunity to learn about your story.</li>
-              <li>Future casting opportunities may become available.</li>
+              <li>Keep Following FEDUP</li>
+              <li>Future Opportunities May Become Available</li>
             </ul>
           `,
         }),

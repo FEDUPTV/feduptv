@@ -9,14 +9,14 @@ type FormData = {
   first_name: string;
   last_name: string;
   prison_name: string;
+  age: string;
   birthdate: string;
   phone: string;
   email: string;
   address: string;
   address_verified: string;
   charges: string;
-  time_served_years: string;
-  time_served_months: string;
+  time_served: string;
   jurisdiction: string;
   children: string;
   children_count: string;
@@ -34,24 +34,20 @@ type FormData = {
   producer_notes: string;
   can_travel_orlando: string;
   over_18: string;
-  agree_privacy: string;
-  agree_release: string;
-  agree_terms: string;
-  agree_truthful: string;
 };
 
 const initialFormData: FormData = {
   first_name: "",
   last_name: "",
   prison_name: "",
+  age: "",
   birthdate: "",
   phone: "",
   email: "",
   address: "",
   address_verified: "",
   charges: "",
-  time_served_years: "",
-  time_served_months: "",
+  time_served: "",
   jurisdiction: "",
   children: "",
   children_count: "",
@@ -69,17 +65,12 @@ const initialFormData: FormData = {
   producer_notes: "",
   can_travel_orlando: "",
   over_18: "",
-  agree_privacy: "",
-  agree_release: "",
-  agree_terms: "",
-  agree_truthful: "",
 };
 
 export default function ApplicationWizard() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [files, setFiles] = useState<FileList | null>(null);
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -110,6 +101,7 @@ export default function ApplicationWizard() {
       1: [
         "first_name",
         "last_name",
+        "age",
         "birthdate",
         "phone",
         "email",
@@ -119,8 +111,7 @@ export default function ApplicationWizard() {
 
       2: [
         "charges",
-         "time_served_years",
-        "time_served_months",
+        "time_served",
         "jurisdiction",
         "children"
       ],
@@ -151,61 +142,11 @@ export default function ApplicationWizard() {
         String((formData as any)[field]).trim() === ""
     );
 
-    if (
-      step === 2 &&
-      formData.children === "yes" &&
-      !formData.children_count
-    ) {
-      alert("Please select how many children you have.");
-      return;
-    }
-
     if (missing?.length) {
       alert(
         "Please complete all required fields before continuing."
       );
       return;
-    }
-
-    if (step === 3) {
-
-      if (
-        !formData.instagram.trim() &&
-        !formData.tiktok.trim() &&
-        !formData.facebook.trim()
-      ) {
-        alert(
-          "Please provide at least one social media profile."
-        );
-        return;
-      }
-    }
-
-    if (step === 4 || step === 5) {
-
-      const storyFields = [
-        formData.fed_up_story,
-        formData.underestimated_story,
-        formData.shocking_truth,
-        formData.confrontation_story,
-        formData.selection_reason,
-        formData.scroll_stopper_story
-      ];
-
-      const tooShort = storyFields.some(
-        (v) =>
-          v &&
-          v.trim().length > 0 &&
-          v.trim().length < 100
-      );
-
-      if (tooShort) {
-        alert(
-          "Story responses must be at least 100 characters."
-        );
-        return;
-      }
-
     }
 
     if (step === 1) {
@@ -245,11 +186,6 @@ export default function ApplicationWizard() {
   };
 
   const handleSubmit = async () => {
-
-    if (submitting) return;
-
-    setSubmitting(true);
-
     try {
       const payload = new FormData();
 
@@ -259,14 +195,6 @@ export default function ApplicationWizard() {
         Array.from(files).forEach((file) => {
           payload.append("files", file);
         });
-      }
-
-      if (!files || files.length === 0) {
-        alert(
-          "Please upload at least one photo or video before submitting."
-        );
-        setSubmitting(false);
-        return;
       }
 
       const response = await fetch("/api/apply", {
@@ -289,7 +217,6 @@ export default function ApplicationWizard() {
     } catch (error) {
       console.error(error);
       alert("Failed to submit application.");
-      setSubmitting(false);
     }
   };
 
@@ -306,36 +233,6 @@ export default function ApplicationWizard() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-20">
       <div className="mb-10">
-
-        <div className="mb-8 rounded-xl border border-yellow-500/20 bg-zinc-900 p-5">
-          <div className="grid gap-3 md:grid-cols-6 text-center text-sm font-bold">
-
-            <div className={step >= 1 ? "text-green-400" : "text-gray-500"}>
-              {step > 1 ? "✓" : "•"} Personal
-            </div>
-
-            <div className={step >= 2 ? "text-green-400" : "text-gray-500"}>
-              {step > 2 ? "✓" : "•"} Prison
-            </div>
-
-            <div className={step >= 3 ? "text-green-400" : "text-gray-500"}>
-              {step > 3 ? "✓" : "•"} Social
-            </div>
-
-            <div className={step >= 4 ? "text-green-400" : "text-gray-500"}>
-              {step > 4 ? "✓" : "•"} Story
-            </div>
-
-            <div className={step >= 5 ? "text-green-400" : "text-gray-500"}>
-              {step > 5 ? "✓" : "•"} Casting
-            </div>
-
-            <div className={step >= 6 ? "text-yellow-400" : "text-gray-500"}>
-              ★ Final Review
-            </div>
-
-          </div>
-        </div>
         <p className="mb-3 text-sm font-black uppercase tracking-[0.35em] text-yellow-500">
           Cast Member Inquiry
         </p>
@@ -427,31 +324,23 @@ export default function ApplicationWizard() {
               </div>
 
               <div>
-                <label className={labelClass}>Birthdate *</label>
+                <label className={labelClass}>Age *</label>
+                <input
+                  value={formData.age}
+                  onChange={(e) => updateField("age", e.target.value)}
+                  className={inputClass}
+                  placeholder="Age"
+                  inputMode="numeric"
+                />
+              </div>
 
+              <div>
+                <label className={labelClass}>Birthdate *</label>
                 <input
                   type="date"
                   value={formData.birthdate}
                   onChange={(e) => updateField("birthdate", e.target.value)}
                   className={inputClass}
-                  max={
-                    new Date(
-                      new Date().setFullYear(
-                        new Date().getFullYear() - 18
-                      )
-                    )
-                      .toISOString()
-                      .split("T")[0]
-                  }
-                  min={
-                    new Date(
-                      new Date().setFullYear(
-                        new Date().getFullYear() - 80
-                      )
-                    )
-                      .toISOString()
-                      .split("T")[0]
-                  }
                 />
               </div>
 
@@ -540,76 +429,26 @@ export default function ApplicationWizard() {
 
               <div>
                 <label className={labelClass}>
-                  How much time did you serve? *
+                  How much time did you serve in prison? *
                 </label>
-
-                <div className="grid gap-4 md:grid-cols-2">
-
-                  <select
-                    value={formData.time_served_years}
-                    onChange={(e) =>
-                      updateField("time_served_years", e.target.value)
-                    }
-                    className={inputClass}
-                  >
-                    <option value="">Years Served</option>
-                    {[...Array(51)].map((_, i) => (
-                      <option key={i} value={String(i)}>
-                        {i} Year{i !== 1 ? "s" : ""}
-                      </option>
-                    ))}
-                  </select>
-
-                  <select
-                    value={formData.time_served_months}
-                    onChange={(e) =>
-                      updateField("time_served_months", e.target.value)
-                    }
-                    className={inputClass}
-                  >
-                    <option value="">Additional Months</option>
-                    {[...Array(12)].map((_, i) => (
-                      <option key={i} value={String(i)}>
-                        {i} Month{i !== 1 ? "s" : ""}
-                      </option>
-                    ))}
-                  </select>
-
-                </div>
+                <input
+                  value={formData.time_served}
+                  onChange={(e) => updateField("time_served", e.target.value)}
+                  className={inputClass}
+                  placeholder="Example: 3 years, 8 months"
+                />
               </div>
 
               <div>
                 <label className={labelClass}>
-                  State / Jurisdiction of Conviction *
+                  What state or jurisdiction were you sentenced in? *
                 </label>
-
-                <select
+                <input
                   value={formData.jurisdiction}
-                  onChange={(e) =>
-                    updateField("jurisdiction", e.target.value)
-                  }
+                  onChange={(e) => updateField("jurisdiction", e.target.value)}
                   className={inputClass}
-                >
-                  <option value="">Select State</option>
-
-                  {[
-                    "Alabama","Alaska","Arizona","Arkansas","California",
-                    "Colorado","Connecticut","Delaware","Florida","Georgia",
-                    "Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas",
-                    "Kentucky","Louisiana","Maine","Maryland","Massachusetts",
-                    "Michigan","Minnesota","Mississippi","Missouri","Montana",
-                    "Nebraska","Nevada","New Hampshire","New Jersey",
-                    "New Mexico","New York","North Carolina","North Dakota",
-                    "Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island",
-                    "South Carolina","South Dakota","Tennessee","Texas","Utah",
-                    "Vermont","Virginia","Washington","West Virginia",
-                    "Wisconsin","Wyoming","Federal"
-                  ].map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="State or jurisdiction"
+                />
               </div>
 
               <div>
@@ -620,33 +459,25 @@ export default function ApplicationWizard() {
                   className={inputClass}
                 >
                   <option value="">Select One</option>
-                  <option value="yes">I Confirm</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
                 </select>
               </div>
 
-              {formData.children === "yes" && (
-                <div>
-                  <label className={labelClass}>
-                    How many children do you have? *
-                  </label>
-
-                  <select
-                    value={formData.children_count}
-                    onChange={(e) =>
-                      updateField("children_count", e.target.value)
-                    }
-                    className={inputClass}
-                  >
-                    <option value="">Select Number</option>
-
-                    {[...Array(21)].map((_, i) => (
-                      <option key={i + 1} value={String(i + 1)}>
-                        {i + 1}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <div>
+                <label className={labelClass}>
+                  How many children do you have?
+                </label>
+                <input
+                  value={formData.children_count}
+                  onChange={(e) =>
+                    updateField("children_count", e.target.value)
+                  }
+                  className={inputClass}
+                  placeholder="Number of children"
+                  inputMode="numeric"
+                />
+              </div>
 
               <div>
                 <label className={labelClass}>What is your current job? </label>
@@ -729,23 +560,6 @@ export default function ApplicationWizard() {
                   className={textareaClass}
                   placeholder="Tell us what you are FEDUP with..."
                 />
-
-                <p
-                  className={`mt-2 text-sm ${
-                    formData.fed_up_story.length >= 250
-                      ? "text-green-400"
-                      : formData.fed_up_story.length >= 100
-                      ? "text-yellow-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formData.fed_up_story.length} characters
-                  {formData.fed_up_story.length >= 250
-                    ? " • Great detail provided"
-                    : formData.fed_up_story.length >= 100
-                    ? " • Minimum met, more detail helps"
-                    : " • Minimum 100 required"}
-                </p>
               </div>
 
               <div>
@@ -761,23 +575,6 @@ export default function ApplicationWizard() {
                   className={textareaClass}
                   placeholder="What happened and how did you respond?"
                 />
-
-                <p
-                  className={`mt-2 text-sm ${
-                    formData.underestimated_story.length >= 250
-                      ? "text-green-400"
-                      : formData.underestimated_story.length >= 100
-                      ? "text-yellow-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formData.underestimated_story.length} characters
-                  {formData.underestimated_story.length >= 250
-                    ? " • Great detail provided"
-                    : formData.underestimated_story.length >= 100
-                    ? " • Minimum met, more detail helps"
-                    : " • Minimum 100 required"}
-                </p>
               </div>
 
               <div>
@@ -793,23 +590,6 @@ export default function ApplicationWizard() {
                   className={textareaClass}
                   placeholder="What would surprise people?"
                 />
-
-                <p
-                  className={`mt-2 text-sm ${
-                    formData.shocking_truth.length >= 250
-                      ? "text-green-400"
-                      : formData.shocking_truth.length >= 100
-                      ? "text-yellow-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formData.shocking_truth.length} characters
-                  {formData.shocking_truth.length >= 250
-                    ? " • Great detail provided"
-                    : formData.shocking_truth.length >= 100
-                    ? " • Minimum met, more detail helps"
-                    : " • Minimum 100 required"}
-                </p>
               </div>
             </div>
           </div>
@@ -840,23 +620,6 @@ export default function ApplicationWizard() {
                   className={textareaClass}
                   placeholder="Who or what are you ready to confront?"
                 />
-
-                <p
-                  className={`mt-2 text-sm ${
-                    formData.confrontation_story.length >= 250
-                      ? "text-green-400"
-                      : formData.confrontation_story.length >= 100
-                      ? "text-yellow-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formData.confrontation_story.length} characters
-                  {formData.confrontation_story.length >= 250
-                    ? " • Great detail provided"
-                    : formData.confrontation_story.length >= 100
-                    ? " • Minimum met, more detail helps"
-                    : " • Minimum 100 required"}
-                </p>
               </div>
 
               <div>
@@ -871,23 +634,6 @@ export default function ApplicationWizard() {
                   className={textareaClass}
                   placeholder="Why should producers select you?"
                 />
-
-                <p
-                  className={`mt-2 text-sm ${
-                    formData.selection_reason.length >= 250
-                      ? "text-green-400"
-                      : formData.selection_reason.length >= 100
-                      ? "text-yellow-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formData.selection_reason.length} characters
-                  {formData.selection_reason.length >= 250
-                    ? " • Great detail provided"
-                    : formData.selection_reason.length >= 100
-                    ? " • Minimum met, more detail helps"
-                    : " • Minimum 100 required"}
-                </p>
               </div>
 
               <div>
@@ -903,23 +649,6 @@ export default function ApplicationWizard() {
                   className={textareaClass}
                   placeholder="What makes your story unforgettable?"
                 />
-
-                <p
-                  className={`mt-2 text-sm ${
-                    formData.scroll_stopper_story.length >= 250
-                      ? "text-green-400"
-                      : formData.scroll_stopper_story.length >= 100
-                      ? "text-yellow-400"
-                      : "text-red-400"
-                  }`}
-                >
-                  {formData.scroll_stopper_story.length} characters
-                  {formData.scroll_stopper_story.length >= 250
-                    ? " • Great detail provided"
-                    : formData.scroll_stopper_story.length >= 100
-                    ? " • Minimum met, more detail helps"
-                    : " • Minimum 100 required"}
-                </p>
               </div>
 
               <div>
@@ -989,14 +718,15 @@ export default function ApplicationWizard() {
 
             <div className="space-y-5">
               <div>
-                <label className={labelClass}>I confirm I am legally eligible to participate in this casting process and understand applicants must be at least 18 years old. *</label>
+                <label className={labelClass}>Are you over the age of 18? *</label>
                 <select
                   value={formData.over_18}
                   onChange={(e) => updateField("over_18", e.target.value)}
                   className={inputClass}
                 >
                   <option value="">Select One</option>
-                  <option value="yes">I Confirm</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
                 </select>
               </div>
 
@@ -1013,7 +743,8 @@ export default function ApplicationWizard() {
                   className={inputClass}
                 >
                   <option value="">Select One</option>
-                  <option value="yes">I Confirm</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
                 </select>
               </div>
 
@@ -1034,120 +765,23 @@ export default function ApplicationWizard() {
 
               <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-6">
                 <h3 className="mb-2 font-black text-yellow-500">
-                  Next Phase of Casting
+                  Orlando Audition Information
                 </h3>
 
                 <p className="text-gray-300">
-                  Advancing in the FEDUP casting process may include an invitation
-                  to a private in-person audition with our production team in
-                  Orlando, Florida.
-
-                  For security and confidentiality reasons, audition details,
-                  scheduling information, and locations will only be shared with
-                  applicants selected to move forward.
+                  Selected applicants will be invited to attend an in-person
+                  audition on July 11, 2026 in Orlando, Florida. The audition
+                  location is private and will only be shared with approved
+                  candidates.
                 </p>
               </div>
-
-              <div className="rounded-xl border border-yellow-500/20 bg-black p-6 space-y-5">
-
-                <h3 className="text-xl font-black text-yellow-500">
-                  Applicant Agreements & Consent
-                </h3>
-
-                <label className="flex gap-3 text-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={formData.agree_privacy === "yes"}
-                    onChange={(e) =>
-                      updateField(
-                        "agree_privacy",
-                        e.target.checked ? "yes" : ""
-                      )
-                    }
-                  />
-                  <span>
-                    I acknowledge that FEDUP may collect, store, review, and
-                    evaluate the information I provide for casting purposes.
-                  </span>
-                </label>
-
-                <label className="flex gap-3 text-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={formData.agree_release === "yes"}
-                    onChange={(e) =>
-                      updateField(
-                        "agree_release",
-                        e.target.checked ? "yes" : ""
-                      )
-                    }
-                  />
-                  <span>
-                    I authorize FEDUP producers to review submitted photos,
-                    videos, social media profiles, and supporting materials.
-                  </span>
-                </label>
-
-                <label className="flex gap-3 text-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={formData.agree_terms === "yes"}
-                    onChange={(e) =>
-                      updateField(
-                        "agree_terms",
-                        e.target.checked ? "yes" : ""
-                      )
-                    }
-                  />
-                  <span>
-                    I understand that submitting an application does not
-                    guarantee selection, participation, compensation, or
-                    appearance on the program.
-                  </span>
-                </label>
-
-                <label className="flex gap-3 text-gray-300">
-                  <input
-                    type="checkbox"
-                    checked={formData.agree_truthful === "yes"}
-                    onChange={(e) =>
-                      updateField(
-                        "agree_truthful",
-                        e.target.checked ? "yes" : ""
-                      )
-                    }
-                  />
-                  <span>
-                    I certify that all information submitted is truthful and
-                    accurate to the best of my knowledge.
-                  </span>
-                </label>
-
-              </div>
-
-              <div className="rounded-xl border border-yellow-500/20 bg-black p-6">
-                <h3 className="mb-2 font-black text-yellow-500">
-                  Before You Submit
-                </h3>
-
-                <p className="text-gray-300">
-                  Please review your answers carefully.
-                  Once submitted, your application may
-                  immediately enter the producer review
-                  process and cannot be edited without
-                  contacting the FEDUP casting team.
-                </p>
-              </div>
-
 
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="w-full rounded-xl bg-yellow-500 py-5 text-lg font-black text-black disabled:opacity-50 disabled:cursor-not-allowed" disabled={submitting}
+                className="w-full rounded-xl bg-yellow-500 py-5 text-lg font-black text-black"
 >
-  {submitting
-    ? "SUBMITTING..."
-    : "BEGIN CASTING REVIEW"}
+  SUBMIT APPLICATION
 </button>
             </div>
           </div>

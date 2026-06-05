@@ -19,6 +19,8 @@ export default function Navbar() {
             width={60}
             height={60}
             priority
+            loading="eager"
+            style={{ width: "60px", height: "60px" }}
           />
         </Link>
 

@@ -15,6 +15,7 @@ export default function Footer() {
               alt="FEDUP"
               width={60}
               height={60}
+              style={{ width: "60px", height: "60px" }}
               className="mx-auto md:mx-0 mb-4"
             />
 
