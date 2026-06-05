@@ -15,18 +15,18 @@ export default function AboutShow() {
   ];
 
   return (
-    <section className="bg-black py-20">
+    <section className="bg-black py-16">
       <div className="mx-auto max-w-7xl px-6">
 
         <p className="mb-4 text-center text-sm font-bold tracking-[0.4em] text-yellow-500">
           ABOUT FEDUP
         </p>
 
-        <h2 className="mb-6 text-center text-5xl font-black text-white">
+        <h2 className="mb-6 text-center text-4xl font-black md:text-5xl text-white">
           More Than A Reality Show
         </h2>
 
-        <p className="mx-auto mb-12 max-w-4xl text-center text-xl text-gray-300">
+        <p className="mx-auto mb-12 max-w-4xl text-center text-lg md:text-xl text-gray-300">
           FEDUP follows women who have overcome adversity and are ready to
           inspire others through their journey.
         </p>

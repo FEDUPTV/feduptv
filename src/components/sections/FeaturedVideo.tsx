@@ -17,14 +17,14 @@ export default function FeaturedVideo() {
   const [activeVideo, setActiveVideo] = useState(videos[0]);
 
   return (
-    <section className="bg-black py-12 border-t border-yellow-500/20">
+    <section className="bg-black py-10 border-t border-yellow-500/20">
       <div className="mx-auto max-w-7xl px-6">
 
         <p className="mb-4 text-center text-sm font-bold tracking-[0.4em] text-yellow-500">
           WATCH THE MOVEMENT
         </p>
 
-        <h2 className="mb-8 text-center text-5xl font-black text-white">
+        <h2 className="mb-6 text-center text-4xl md:text-5xl font-black text-white">
           {activeVideo.title}
         </h2>
 
@@ -35,7 +35,7 @@ export default function FeaturedVideo() {
           autoPlay
           muted
           playsInline
-          className="w-full rounded-2xl border border-yellow-500/20"
+          className="w-full rounded-xl md:rounded-2xl border border-yellow-500/20"
         />
 
         <div className="mt-6 flex flex-wrap justify-center gap-4">

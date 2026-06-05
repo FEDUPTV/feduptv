@@ -3,13 +3,13 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-black border-t border-yellow-500/20 px-6 py-10 text-white">
-      <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl gap-8 grid-cols-1 md:grid-cols-4">
         <div>
           
         <img
           src="/images/logo.png"
           alt="FEDUP"
-          className="mb-4 h-16 w-auto"
+          className="mb-4 h-14 w-auto"
         />
 
         <h3 className="mb-3 font-black text-yellow-500">
@@ -23,7 +23,7 @@ export default function Footer() {
         <div>
           <h4 className="mb-3 font-bold text-white">Explore</h4>
           <Link href="/" className="block mb-2 text-gray-400 hover:text-yellow-500">Home</Link>
-          <Link href="/apply" className="block mb-2 text-gray-400 hover:text-yellow-500">Apply</Link>
+          <Link href="/apply" className="block mb-2 text-gray-400 hover:text-yellow-500">Audition</Link>
           <Link href="/sponsors" className="block mb-2 text-gray-400 hover:text-yellow-500">Sponsors</Link>
         </div>
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function FinalCTA() {
   return (
-    <section className="relative overflow-hidden bg-black py-24 text-white">
+    <section className="relative overflow-hidden bg-black py-16 text-white">
 
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.18),transparent_60%)]" />
 
@@ -12,11 +12,11 @@ export default function FinalCTA() {
           READY TO SHARE YOUR STORY?
         </p>
 
-        <h2 className="mb-8 text-5xl font-black md:text-7xl">
+        <h2 className="mb-8 text-4xl font-black md:text-7xl">
           Your Past Does Not Define You
         </h2>
 
-        <p className="mx-auto mb-10 max-w-3xl text-xl text-gray-300">
+        <p className="mx-auto mb-10 max-w-3xl text-lg md:text-xl text-gray-300">
           FEDUP is seeking powerful women ready to inspire others and step into purpose.
         </p>
 
