@@ -21,7 +21,8 @@ export default function ResourcesPage() {
   const [state, setState] = useState("");
   const [county, setCounty] = useState("");
   const [category, setCategory] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+const [locationEnabled, setLocationEnabled] = useState(false);
 
   useEffect(() => {
     async function loadResources() {
