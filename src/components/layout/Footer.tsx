@@ -1,50 +1,73 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-black border-t border-yellow-500/20 px-6 py-10 text-white">
-      <div className="mx-auto grid max-w-6xl gap-8 grid-cols-1 md:grid-cols-4">
-        <div>
-          
-        <img
-          src="/images/logo.png"
-          alt="FEDUP"
-          className="mb-4 h-14 w-auto"
-        />
+    <footer className="border-t border-yellow-500/20 bg-black text-white">
 
-        <h3 className="mb-3 font-black text-yellow-500">
-        </h3>
-        
-          <p className="text-gray-400">
-            Females Ending Defeat. Unleashing Purpose.
-          </p>
+      <div className="mx-auto max-w-7xl px-5 py-10">
+
+        <div className="grid grid-cols-3 gap-6 text-center md:text-left">
+
+          <div>
+            <Image
+              src="/images/logo.png"
+              alt="FEDUP"
+              width={60}
+              height={60}
+              className="mx-auto md:mx-0 mb-4"
+            />
+
+            <p className="text-sm text-gray-400">
+              Females Ending Defeat.
+              <br />
+              Unleashing Purpose.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="mb-3 font-bold text-white">
+              Explore
+            </h3>
+
+            <div className="space-y-2 text-gray-400 text-sm">
+              <Link href="/">Home</Link><br />
+              <Link href="/apply">Audition</Link><br />
+              <Link href="/sponsors">Sponsors</Link><br />
+              <Link href="/contact">Contact</Link>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="mb-3 font-bold text-white">
+              Casting
+            </h3>
+
+            <div className="space-y-2 text-gray-400 text-sm">
+              <p>Orlando, Florida</p>
+              <p>July 11, 2026</p>
+              <Link href="/portal">Portal</Link>
+            </div>
+          </div>
+
         </div>
 
-        <div>
-          <h4 className="mb-3 font-bold text-white">Explore</h4>
-          <Link href="/" className="block mb-2 text-gray-400 hover:text-yellow-500">Home</Link>
-          <Link href="/apply" className="block mb-2 text-gray-400 hover:text-yellow-500">Audition</Link>
-          <Link href="/sponsors" className="block mb-2 text-gray-400 hover:text-yellow-500">Sponsors</Link>
-        </div>
-
-        <div>
-          <h4 className="mb-3 font-bold text-white">Casting</h4>
-          <p className="text-gray-400">Orlando, Florida</p>
-          <p className="text-gray-400">July 11, 2026</p>
-        </div>
-
-        <div>
-          <h4 className="mb-3 font-bold text-white">Contact</h4>
-
-          <Link href="/contact" className="block mb-2 text-gray-400 hover:text-yellow-500">
-            Contact FEDUP
-          </Link>
-
-          <Link href="/portal" className="block text-gray-400 hover:text-yellow-500">
-            Portal
-          </Link>
-        </div>
       </div>
+
+      <div className="border-t border-yellow-500/10 py-4 text-center text-xs text-gray-500">
+        © 2026 FEDUP Reality Series. All Rights Reserved.
+        <br />
+        Website Designed & Managed by
+        <a
+          href="https://visionstampabay.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-1 text-yellow-500 hover:text-yellow-400"
+        >
+          VisionsTampaBay.com
+        </a>
+      </div>
+
     </footer>
   );
 }
