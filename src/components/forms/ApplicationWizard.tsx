@@ -106,6 +106,23 @@ export default function ApplicationWizard() {
     }));
   };
 
+  const getAgeFromBirthdate = (birthdate: string) => {
+    const birth = new Date(birthdate);
+    const today = new Date();
+
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
+
   const goNext = () => {
 
     const requiredFields: Record<number, string[]> = {
@@ -260,6 +277,17 @@ export default function ApplicationWizard() {
       const phoneDigits = formData.phone.replace(/\D/g, "");
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+      const applicantAge = getAgeFromBirthdate(formData.birthdate);
+
+      if (
+        !formData.birthdate ||
+        applicantAge < 18 ||
+        applicantAge > 80
+      ) {
+        alert("Applicants must be between 18 and 80 years old.");
+        return;
+      }
+
       if (phoneDigits.length !== 10) {
         alert("Please enter a valid phone number in this format: (813) 555-1234");
         return;
@@ -330,7 +358,7 @@ export default function ApplicationWizard() {
 
       localStorage.removeItem(STORAGE_KEY);
 
-      window.location.href = "/apply/success";
+      window.location.assign("/apply/success");
 
     } catch (error) {
       console.error(error);
@@ -342,10 +370,10 @@ export default function ApplicationWizard() {
   const progress = ((step - 1) / (TOTAL_STEPS - 1)) * 100;
 
   const inputClass =
-    "w-full rounded-lg border border-zinc-700 bg-black p-4 text-white placeholder:text-zinc-500 focus:border-yellow-500 focus:outline-none";
+    "w-full rounded-lg border border-zinc-700 bg-black p-4 text-white placeholder:text-zinc-500 transition-all duration-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 focus:outline-none";
 
   const textareaClass =
-    "w-full min-h-[140px] rounded-lg border border-zinc-700 bg-black p-4 text-white placeholder:text-zinc-500 focus:border-yellow-500 focus:outline-none";
+    "w-full min-h-[140px] rounded-lg border border-zinc-700 bg-black p-4 text-white placeholder:text-zinc-500 transition-all duration-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 focus:outline-none";
 
   const labelClass = "mb-2 block text-sm font-bold text-white";
 
@@ -433,7 +461,7 @@ export default function ApplicationWizard() {
                   value={formData.first_name}
                   onChange={(e) => updateField("first_name", e.target.value)}
                   className={inputClass}
-                  placeholder="First Name"
+                  placeholder="First Name" autoComplete="given-name"
                 />
               </div>
 
@@ -443,7 +471,7 @@ export default function ApplicationWizard() {
                   value={formData.last_name}
                   onChange={(e) => updateField("last_name", e.target.value)}
                   className={inputClass}
-                  placeholder="Last Name"
+                  placeholder="Last Name" autoComplete="family-name"
                 />
               </div>
 
@@ -455,7 +483,7 @@ export default function ApplicationWizard() {
                   value={formData.prison_name}
                   onChange={(e) => updateField("prison_name", e.target.value)}
                   className={inputClass}
-                  placeholder="Prison Name / Nickname"
+                  placeholder="Prison Name / Nickname" autoComplete="nickname"
                 />
               </div>
 
@@ -510,7 +538,7 @@ export default function ApplicationWizard() {
                     updateField("phone", value);
                   }}
                   className={inputClass}
-                  placeholder="(813) 555-1234"
+                  placeholder="(813) 555-1234" autoComplete="tel"
                 />
               </div>
 
@@ -523,7 +551,7 @@ export default function ApplicationWizard() {
                     updateField("email", e.target.value.trim().toLowerCase())
                   }
                   className={inputClass}
-                  placeholder="name@email.com"
+                  placeholder="name@email.com" autoComplete="email"
                 />
               </div>
 
@@ -537,7 +565,7 @@ export default function ApplicationWizard() {
     updateField("address_verified", "yes");
   }}
   className={inputClass}
-  placeholder="Street Address, City, State"
+  placeholder="Street Address, City, State" autoComplete="street-address"
 />
 
 <p className="mt-2 text-sm text-gray-500">
@@ -1179,7 +1207,7 @@ export default function ApplicationWizard() {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="w-full rounded-xl bg-yellow-500 py-5 text-lg font-black text-black disabled:opacity-50 disabled:cursor-not-allowed" disabled={submitting}
+                className="w-full rounded-xl bg-yellow-500 py-5 text-lg font-black text-black transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled={submitting}
 >
   {submitting
     ? "SUBMITTING..."
@@ -1203,7 +1231,7 @@ export default function ApplicationWizard() {
         {step < TOTAL_STEPS && (
           <button
             onClick={goNext}
-            className="rounded bg-yellow-500 px-6 py-3 font-black text-black"
+            className="rounded bg-yellow-500 px-6 py-3 font-black text-black transition active:scale-95"
           >
             Next
           </button>
