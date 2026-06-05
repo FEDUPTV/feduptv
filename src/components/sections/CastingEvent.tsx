@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function CastingEvent() {
   return (
-    <section className="bg-yellow-500 py-16 text-black">
+    <section id="audition-event" className="bg-yellow-500 py-16 text-black">
       <div className="mx-auto max-w-4xl px-6 text-center">
         <p className="mb-4 text-sm font-black uppercase tracking-[0.35em]">
           Live Casting Event
