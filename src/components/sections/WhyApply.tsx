@@ -9,13 +9,13 @@ export default function WhyApply() {
   ];
 
   return (
-    <section className="py-24 border-t border-yellow-500/20">
+    <section className="py-16 md:py-24 border-t border-yellow-500/20">
       <div className="max-w-7xl mx-auto px-6">
         <p className="text-yellow-500 uppercase tracking-[6px] text-center mb-4">
           Why Apply
         </p>
 
-        <h2 className="text-5xl font-black text-center mb-12">
+        <h2 className="text-4xl md:text-5xl font-black text-center mb-12">
           Your Story Matters
         </h2>
 

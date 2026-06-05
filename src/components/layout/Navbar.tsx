@@ -83,7 +83,7 @@ export default function Navbar() {
 
           <Link
             href="/apply"
-            className="rounded-full bg-yellow-500 px-5 py-3 font-black text-black"
+            className="rounded-full bg-yellow-500 px-5 py-2 font-black text-black"
           >
             Audition
           </Link>
@@ -102,11 +102,11 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden border-t border-yellow-500/20 bg-black">
 
-          <div className="flex flex-col p-6 text-center text-lg font-bold uppercase">
+          <div className="flex flex-col p-4 text-center text-base font-bold uppercase text-white">
 
             <Link
               href="/"
-              className="py-3"
+              className="py-3 text-white hover:text-yellow-500 transition"
               onClick={() => setOpen(false)}
             >
               Home
@@ -114,7 +114,7 @@ export default function Navbar() {
 
             <Link
               href="/apply"
-              className="py-3"
+              className="py-3 text-white hover:text-yellow-500 transition"
               onClick={() => setOpen(false)}
             >
               Audition
@@ -122,7 +122,7 @@ export default function Navbar() {
 
             <Link
               href="/sponsors"
-              className="py-3"
+              className="py-3 text-white hover:text-yellow-500 transition"
               onClick={() => setOpen(false)}
             >
               Sponsors
@@ -130,7 +130,7 @@ export default function Navbar() {
 
             <Link
               href="/contact"
-              className="py-3"
+              className="py-3 text-white hover:text-yellow-500 transition"
               onClick={() => setOpen(false)}
             >
               Contact
@@ -138,7 +138,7 @@ export default function Navbar() {
 
             <Link
               href="/portal"
-              className="py-3"
+              className="py-3 text-white hover:text-yellow-500 transition"
               onClick={() => setOpen(false)}
             >
               Portal

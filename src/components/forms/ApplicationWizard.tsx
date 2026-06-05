@@ -153,13 +153,13 @@ export default function ApplicationWizard() {
   const labelClass = "mb-2 block text-sm font-bold text-white";
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-20">
+    <div className="mx-auto max-w-5xl px-6 py-14 md:py-20">
       <div className="mb-10">
         <p className="mb-3 text-sm font-black uppercase tracking-[0.35em] text-yellow-500">
           Cast Member Inquiry
         </p>
 
-        <h1 className="mb-6 text-4xl font-black text-yellow-500 md:text-6xl">
+        <h1 className="mb-6 text-4xl font-black text-yellow-500 md:text-4xl md:text-5xl md:text-6xl">
           FEDUP Casting Application
         </h1>
 
@@ -687,7 +687,7 @@ export default function ApplicationWizard() {
         <button
           disabled={step === 1}
           onClick={goBack}
-          className="rounded bg-zinc-800 px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded bg-zinc-800 px-5 py-3 md:px-6 md:py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
           Back
         </button>
@@ -695,7 +695,7 @@ export default function ApplicationWizard() {
         {step < TOTAL_STEPS && (
           <button
             onClick={goNext}
-            className="rounded bg-yellow-500 px-6 py-3 font-black text-black"
+            className="rounded bg-yellow-500 px-5 py-3 md:px-6 md:py-3 font-black text-black"
           >
             Next
           </button>

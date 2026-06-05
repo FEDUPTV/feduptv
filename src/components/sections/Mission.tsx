@@ -6,7 +6,7 @@ export default function Mission() {
           Our Mission
         </p>
 
-        <h2 className="mb-6 text-4xl font-black md:text-5xl text-yellow-500 md:text-7xl">
+        <h2 className="mb-6 text-4xl font-black md:text-4xl md:text-5xl text-yellow-500 md:text-7xl">
           FEDUP
         </h2>
 

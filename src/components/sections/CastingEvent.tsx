@@ -8,7 +8,7 @@ export default function CastingEvent() {
           Live Casting Event
         </p>
 
-        <h2 className="mb-4 text-5xl font-black md:text-7xl">
+        <h2 className="mb-4 text-4xl md:text-5xl font-black md:text-7xl">
           July 11, 2026
         </h2>
 

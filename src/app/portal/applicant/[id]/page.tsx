@@ -143,7 +143,7 @@ export default function CandidateDetailPage() {
   }
 
   if (loading) {
-    return <main className="min-h-screen bg-black p-10 text-white">Loading applicant...</main>;
+    return <main className="min-h-screen pb-24 md:pb-0 bg-black p-10 text-white">Loading applicant...</main>;
   }
 
 
@@ -157,7 +157,7 @@ export default function CandidateDetailPage() {
     ).toFixed(1);
 
   if (!applicant) {
-    return <main className="min-h-screen bg-black p-10 text-white">Candidate not found.</main>;
+    return <main className="min-h-screen pb-24 md:pb-0 bg-black p-10 text-white">Candidate not found.</main>;
   }
 
   const yesVotes =
@@ -176,7 +176,7 @@ export default function CandidateDetailPage() {
       : "Needs Review";
 
   return (
-    <main className="min-h-screen bg-black p-6 text-white md:p-10">
+    <main className="min-h-screen pb-24 md:pb-0 bg-black p-6 text-white md:p-10">
       <div className="mx-auto max-w-6xl">
         <Link href="/portal" className="mb-8 inline-block text-yellow-500 hover:underline">
           Back to Casting Portal
@@ -186,7 +186,7 @@ export default function CandidateDetailPage() {
           <p className="mb-2 text-sm uppercase tracking-[0.35em] text-yellow-500">
             Candidate Profile
           </p>
-          <h1 className="text-4xl font-black md:text-6xl">
+          <h1 className="text-4xl font-black md:text-4xl md:text-5xl md:text-6xl">
             {applicant.first_name} {applicant.last_name}
           </h1>
           <p className="mt-3 text-gray-400">
@@ -194,7 +194,7 @@ export default function CandidateDetailPage() {
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <section className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6 lg:col-span-1">
             <h2 className="mb-5 text-2xl font-black text-yellow-500">
               Casting Controls
@@ -465,7 +465,7 @@ export default function CandidateDetailPage() {
 
               <div className="text-center">
 
-                <div className="text-5xl font-black text-yellow-500">
+                <div className="text-4xl md:text-5xl font-black text-yellow-500">
                   {averageProducerScore}
                 </div>
 

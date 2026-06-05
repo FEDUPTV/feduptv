@@ -66,8 +66,8 @@ export default function SponsorsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-black p-6 text-white md:p-10">
-      <h1 className="mb-8 text-5xl font-black text-yellow-500">
+    <main className="min-h-screen pb-24 md:pb-0 bg-black p-6 text-white md:p-10">
+      <h1 className="mb-8 text-4xl md:text-5xl font-black text-yellow-500">
         Sponsor CRM
       </h1>
 

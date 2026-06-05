@@ -1,6 +1,6 @@
 export default function CastingCall() {
   return (
-    <section className="py-24 px-6 bg-black">
+    <section className="py-16 md:py-24 px-6 bg-black">
       <div className="max-w-6xl mx-auto">
 
         <div className="text-center mb-16">
@@ -9,7 +9,7 @@ export default function CastingCall() {
             Now Casting
           </p>
 
-          <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
+          <h2 className="text-4xl md:text-4xl md:text-5xl md:text-6xl font-black text-white mb-6">
             Who We're Looking For
           </h2>
 
@@ -19,7 +19,7 @@ export default function CastingCall() {
 
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10 gap-6">
 
           {[
             "Formerly incarcerated women",

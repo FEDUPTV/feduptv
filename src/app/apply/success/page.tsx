@@ -1,9 +1,9 @@
 export default function SuccessPage() {
   return (
-    <main className="min-h-screen bg-black text-white flex items-center justify-center">
+    <main className="min-h-screen pb-24 md:pb-0 bg-black text-white flex items-center justify-center">
       <div className="max-w-2xl text-center p-8">
 
-        <h1 className="text-5xl font-black text-yellow-500 mb-6">
+        <h1 className="text-4xl md:text-5xl font-black text-yellow-500 mb-6">
           Audition Received
         </h1>
 

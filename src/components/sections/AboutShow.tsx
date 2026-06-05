@@ -22,7 +22,7 @@ export default function AboutShow() {
           ABOUT FEDUP
         </p>
 
-        <h2 className="mb-6 text-center text-4xl font-black md:text-5xl text-white">
+        <h2 className="mb-6 text-center text-4xl font-black md:text-4xl md:text-5xl text-white">
           More Than A Reality Show
         </h2>
 

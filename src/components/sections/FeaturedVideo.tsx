@@ -24,7 +24,7 @@ export default function FeaturedVideo() {
           WATCH THE MOVEMENT
         </p>
 
-        <h2 className="mb-6 text-center text-4xl md:text-5xl font-black text-white">
+        <h2 className="mb-6 text-center text-4xl md:text-4xl md:text-5xl font-black text-white">
           {activeVideo.title}
         </h2>
 

@@ -25,7 +25,7 @@ export default function PortalGuard({ children }: { children: React.ReactNode })
   if (allowed) return <>{children}</>;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-black p-6 text-white">
+    <main className="flex min-h-screen pb-24 md:pb-0 items-center justify-center bg-black p-6 text-white">
       <div className="w-full max-w-md rounded-2xl border border-yellow-500/20 bg-zinc-900 p-8">
         <h1 className="mb-4 text-3xl font-black text-yellow-500">FEDUP Portal</h1>
         <p className="mb-6 text-gray-400">Enter portal password.</p>

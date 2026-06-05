@@ -34,13 +34,13 @@ function SocialIcon({
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen pb-24 md:pb-0 bg-black text-white">
       <section className="border-b border-yellow-500/20 px-6 py-14 text-center">
         <p className="mb-3 text-sm font-black tracking-[0.4em] text-yellow-500">
           CONTACT FEDUP
         </p>
 
-        <h1 className="text-5xl font-black md:text-6xl">Let's Connect</h1>
+        <h1 className="text-4xl md:text-5xl font-black md:text-4xl md:text-5xl md:text-6xl">Let's Connect</h1>
 
         <p className="mx-auto mt-5 max-w-3xl text-lg text-gray-400">
           Auditions, sponsorships, partnerships, media, and FEDUP inquiries.
@@ -110,7 +110,7 @@ export default function ContactPage() {
       <section className="mx-auto max-w-7xl px-6 pb-20">
         <div className="mb-10 h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
 
-        <h2 className="mb-10 text-center text-5xl font-black text-yellow-500">
+        <h2 className="mb-10 text-center text-4xl md:text-5xl font-black text-yellow-500">
           Meet The Team
         </h2>
 

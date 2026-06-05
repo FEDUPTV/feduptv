@@ -31,8 +31,8 @@ export default function SponsorsPage() {
 
   return (
     <main className="bg-black text-white">
-      <section className="px-6 py-16 text-center md:py-24">
-        <h1 className="mx-auto mb-6 max-w-4xl text-5xl font-black leading-tight text-yellow-500 md:text-7xl">
+      <section className="px-6 py-16 text-center md:py-16 md:py-24">
+        <h1 className="mx-auto mb-6 max-w-4xl text-4xl md:text-4xl md:text-5xl font-black leading-tight text-yellow-500 md:text-7xl">
           Sponsor FEDUP
         </h1>
 
@@ -61,9 +61,9 @@ export default function SponsorsPage() {
         ))}
       </section>
 
-      <section className="bg-zinc-950 py-16 md:py-24">
+      <section className="bg-zinc-950 py-16 md:py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="mb-10 text-center text-4xl font-black md:text-5xl">
+          <h2 className="mb-10 text-center text-4xl font-black md:text-4xl md:text-5xl">
             Why Partner With FEDUP?
           </h2>
 
@@ -82,13 +82,13 @@ export default function SponsorsPage() {
         </div>
       </section>
 
-      <section className="bg-black py-16 md:py-24">
+      <section className="bg-black py-16 md:py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="mb-12 text-center text-4xl font-black md:text-5xl">
+          <h2 className="mb-12 text-center text-4xl font-black md:text-4xl md:text-5xl">
             Audience Reach
           </h2>
 
-          <div className="grid gap-10 text-center md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-6 text-center md:grid-cols-4">
             {[
               ["2M+", "Monthly Views"],
               ["USA", "Nationwide Reach"],
@@ -96,7 +96,7 @@ export default function SponsorsPage() {
               ["LIVE", "Casting Events"],
             ].map(([number, label]) => (
               <div key={label}>
-                <div className="text-5xl font-black text-yellow-500">
+                <div className="text-4xl md:text-4xl md:text-5xl font-black text-yellow-500">
                   {number}
                 </div>
                 <p className="mt-2 text-xl text-gray-400">{label}</p>
@@ -106,9 +106,9 @@ export default function SponsorsPage() {
         </div>
       </section>
 
-      <section className="bg-zinc-950 py-16 md:py-24">
+      <section className="bg-zinc-950 py-16 md:py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-6">
-          <h2 className="mb-10 text-center text-4xl font-black md:text-5xl">
+          <h2 className="mb-10 text-center text-4xl font-black md:text-4xl md:text-5xl">
             Request Sponsorship Information
           </h2>
 
