@@ -71,7 +71,7 @@ export async function PATCH(
       const emailResult = await resend.emails.send({
         from:
           process.env.RESEND_FROM_EMAIL ||
-          "FEDUP <onboarding@resend.dev>",
+          process.env.RESEND_FROM_EMAIL || "FEDUP Casting <casting@feduptv.com>",
         to: data.email,
         subject: emailTemplate.subject,
         html: emailTemplate.html,
