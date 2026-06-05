@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-type Applicant = {
+type Candidate = {
   id: string;
   first_name: string | null;
   last_name: string | null;
@@ -29,7 +29,7 @@ const statuses = [
   "Rejected",
 ];
 
-function avg(applicant: Applicant) {
+function avg(applicant: Candidate) {
   return (
     Number(applicant.producer_one_rating || 0) +
     Number(applicant.producer_two_rating || 0) +
@@ -37,19 +37,19 @@ function avg(applicant: Applicant) {
   ) / 3;
 }
 
-export default function ApplicantsTable() {
-  const [applicants, setApplicants] = useState<Applicant[]>([]);
+export default function CandidatesTable() {
+  const [applicants, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
-    async function loadApplicants() {
+    async function loadCandidates() {
       try {
         const response = await fetch("/api/applicants");
         const data = await response.json();
-        setApplicants(data.applicants || []);
+        setCandidates(data.applicants || []);
       } catch (error) {
         console.error(error);
       } finally {
@@ -57,10 +57,10 @@ export default function ApplicantsTable() {
       }
     }
 
-    loadApplicants();
+    loadCandidates();
   }, []);
 
-  const filteredApplicants = useMemo(() => {
+  const filteredCandidates = useMemo(() => {
     const results = applicants.filter((applicant) => {
       const fullText = [
         applicant.first_name,
@@ -129,11 +129,11 @@ export default function ApplicantsTable() {
       <div className="overflow-hidden rounded-2xl border border-yellow-500/20 bg-zinc-900">
         <div className="border-b border-zinc-800 p-6">
           <h2 className="text-2xl font-black text-yellow-500">
-            Applicants ({filteredApplicants.length})
+            Candidates ({filteredCandidates.length})
           </h2>
         </div>
 
-        {filteredApplicants.length === 0 ? (
+        {filteredCandidates.length === 0 ? (
           <div className="p-10 text-gray-400">No applicants found.</div>
         ) : (
           <div className="overflow-x-auto">
@@ -150,7 +150,7 @@ export default function ApplicantsTable() {
               </thead>
 
               <tbody>
-                {filteredApplicants.map((applicant) => (
+                {filteredCandidates.map((applicant) => (
                   <tr key={applicant.id} className="border-t border-zinc-800 hover:bg-zinc-800/60">
                     <td className="p-4">
                       <Link href={`/portal/applicant/${applicant.id}`} className="font-bold text-yellow-500 hover:underline">

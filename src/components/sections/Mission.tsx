@@ -1,31 +1,21 @@
 export default function Mission() {
   return (
-    <section className="py-24 px-6 bg-zinc-950">
-
-      <div className="max-w-5xl mx-auto text-center">
-
-        <p className="text-yellow-500 uppercase tracking-[0.3em] font-bold mb-6">
+    <section className="bg-zinc-950 py-20 text-white border-t border-yellow-500/10">
+      <div className="mx-auto max-w-4xl px-6 text-center">
+        <p className="mb-4 text-sm font-black uppercase tracking-[0.35em] text-yellow-500">
           Our Mission
         </p>
 
-        <h2 className="text-5xl md:text-7xl font-black text-yellow-500 mb-10">
-          FED UP
+        <h2 className="mb-6 text-5xl font-black text-yellow-500 md:text-7xl">
+          FEDUP
         </h2>
 
-        <div className="text-2xl md:text-4xl font-bold mb-10">
-          Females Ending Defeat.
-          <br />
-          Unleashing Purpose.
-        </div>
-
-        <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-          FED UP is a platform dedicated to highlighting women
-          who have overcome adversity, embraced growth,
-          reclaimed their power, and stepped into purpose.
+        <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-300">
+          FEDUP is a platform dedicated to highlighting women who have overcome
+          adversity, embraced growth, reclaimed their power, and stepped into
+          purpose.
         </p>
-
       </div>
-
     </section>
   );
 }

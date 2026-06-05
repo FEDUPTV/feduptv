@@ -160,17 +160,17 @@ export default function ApplicationWizard() {
         </p>
 
         <h1 className="mb-6 text-4xl font-black text-yellow-500 md:text-6xl">
-          FED UP Casting Application
+          FEDUP Casting Application
         </h1>
 
         <div className="mb-8 rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6">
           <p className="mb-4 text-lg leading-relaxed text-gray-300">
-            Thank you for your interest in the FED UP Reality TV Series. We are
+            Thank you for your interest in the FEDUP Reality TV Series. We are
             happy to have the opportunity to hear your story.
           </p>
 
           <p className="mb-4 text-lg leading-relaxed text-gray-300">
-            FED UP stands for Females Ending Defeat. Unleashing Purpose. This
+            FEDUP stands for Females Ending Defeat. Unleashing Purpose. This
             reality television series showcases the story, redemption,
             resilience, and transformation of women who have served time in
             prison and are rebuilding their lives.
@@ -178,7 +178,7 @@ export default function ApplicationWizard() {
 
           <p className="text-lg leading-relaxed text-gray-300">
             Please complete the application below if you would like to audition
-            for a chance to be selected as a cast member for the FED UP Reality
+            for a chance to be selected as a cast member for the FEDUP Reality
             TV Series.
           </p>
         </div>
@@ -446,14 +446,14 @@ export default function ApplicationWizard() {
             <div className="space-y-5">
               <div>
                 <label className={labelClass}>
-                  Tell us one thing you are completely FED UP with. What has it
+                  Tell us one thing you are completely FEDUP with. What has it
                   cost you emotionally, mentally, and financially? *
                 </label>
                 <textarea
                   value={formData.fed_up_story}
                   onChange={(e) => updateField("fed_up_story", e.target.value)}
                   className={textareaClass}
-                  placeholder="Tell us what you are FED UP with..."
+                  placeholder="Tell us what you are FEDUP with..."
                 />
               </div>
 
@@ -645,7 +645,7 @@ export default function ApplicationWizard() {
 
               <div>
                 <label className={labelClass}>
-                  What else would you like for the producers of FED UP to know
+                  What else would you like for the producers of FEDUP to know
                   about you?
                 </label>
                 <textarea

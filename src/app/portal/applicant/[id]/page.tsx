@@ -15,11 +15,11 @@ const statuses = [
   "Rejected",
 ];
 
-export default function ApplicantDetailPage() {
+export default function CandidateDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [applicant, setApplicant] = useState<any>(null);
+  const [applicant, setCandidate] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -55,13 +55,13 @@ export default function ApplicantDetailPage() {
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadApplicant() {
+    async function loadCandidate() {
       try {
         const response = await fetch(`/api/applicants/${id}`);
         const data = await response.json();
 
         if (data.applicant) {
-          setApplicant(data.applicant);
+          setCandidate(data.applicant);
           setStatus(data.applicant.status || "New");
           setProducerNotes(data.applicant.producer_notes || "");
 
@@ -95,7 +95,7 @@ export default function ApplicantDetailPage() {
       }
     }
 
-    if (id) loadApplicant();
+    if (id) loadCandidate();
   }, [id]);
 
   async function saveChanges() {
@@ -132,7 +132,7 @@ export default function ApplicantDetailPage() {
         throw new Error(data.error || "Failed to save");
       }
 
-      setApplicant(data.applicant);
+      setCandidate(data.applicant);
       alert("Saved successfully.");
     } catch (error) {
       console.error(error);
@@ -157,7 +157,7 @@ export default function ApplicantDetailPage() {
     ).toFixed(1);
 
   if (!applicant) {
-    return <main className="min-h-screen bg-black p-10 text-white">Applicant not found.</main>;
+    return <main className="min-h-screen bg-black p-10 text-white">Candidate not found.</main>;
   }
 
   const yesVotes =
@@ -184,7 +184,7 @@ export default function ApplicantDetailPage() {
 
         <div className="mb-8 rounded-2xl border border-yellow-500/20 bg-zinc-900 p-8">
           <p className="mb-2 text-sm uppercase tracking-[0.35em] text-yellow-500">
-            Applicant Profile
+            Candidate Profile
           </p>
           <h1 className="text-4xl font-black md:text-6xl">
             {applicant.first_name} {applicant.last_name}
@@ -228,7 +228,7 @@ export default function ApplicantDetailPage() {
               placeholder="Internal producer notes..."
             />
 
-            <div className="mb-5 space-y-4">
+            <div className="hidden mb-5 space-y-4">
 
               <div>
                 <label className="mb-2 block text-sm font-bold">
@@ -284,7 +284,7 @@ export default function ApplicantDetailPage() {
             </div>
 
 
-            <div className="mb-5 rounded-xl border border-yellow-500/20 bg-black p-5">
+            <div className="hidden mb-5 rounded-xl border border-yellow-500/20 bg-black p-5">
               <h3 className="mb-4 text-lg font-black text-yellow-500">
                 Audition Scheduler
               </h3>
@@ -333,7 +333,7 @@ export default function ApplicantDetailPage() {
               </div>
             </div>
 
-            <div className="mb-5 rounded-xl border border-yellow-500/20 bg-black p-5">
+            <div className="hidden mb-5 rounded-xl border border-yellow-500/20 bg-black p-5">
               <h3 className="mb-4 text-lg font-black text-yellow-500">
                 Producer Voting
               </h3>
@@ -373,7 +373,7 @@ export default function ApplicantDetailPage() {
 
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Applicant ID</span>
+                  <span className="text-gray-400">Candidate ID</span>
                   <span>{applicant.id?.slice(0,8)}</span>
                 </div>
 
@@ -533,7 +533,7 @@ export default function ApplicantDetailPage() {
             </Card>
 
             <Card title="Story Responses">
-              <Long label="FED UP Story" value={applicant.fed_up_story} />
+              <Long label="FEDUP Story" value={applicant.fed_up_story} />
               <Long label="Underestimated Story" value={applicant.underestimated_story} />
               <Long label="Shocking Truth" value={applicant.shocking_truth} />
               <Long label="Confrontation Story" value={applicant.confrontation_story} />
@@ -650,7 +650,7 @@ function MediaGallery({
               >
                 <img
                   src={url}
-                  alt={`Applicant photo ${index + 1}`}
+                  alt={`Candidate photo ${index + 1}`}
                   className="h-36 w-full object-cover transition duration-300 group-hover:scale-105 md:h-44"
                 />
               </button>
@@ -689,7 +689,7 @@ function MediaGallery({
         >
           <img
             src={activePhoto}
-            alt="Applicant photo preview"
+            alt="Candidate photo preview"
             className="max-h-[90vh] max-w-[95vw] rounded-2xl object-contain"
           />
         </div>

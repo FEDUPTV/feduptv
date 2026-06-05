@@ -4,16 +4,16 @@ import { useState } from "react";
 
 const videos = [
   {
-    title: "Official Casting Video",
+    title: "Official Casting Call",
     src: "/images/mainvideo.mov",
   },
   {
-    title: "FEDUP Story Trailer",
+    title: "FEDUP Mentioned",
     src: "/images/mainvideo2.mov",
   },
 ];
 
-export default function FeaturedTrailer() {
+export default function FeaturedVideo() {
   const [activeVideo, setActiveVideo] = useState(videos[0]);
 
   return (
@@ -33,6 +33,7 @@ export default function FeaturedTrailer() {
           src={activeVideo.src}
           controls
           autoPlay
+          muted
           playsInline
           className="w-full rounded-2xl border border-yellow-500/20"
         />
@@ -42,16 +43,17 @@ export default function FeaturedTrailer() {
             <button
               key={video.src}
               onClick={() => setActiveVideo(video)}
-              className={`rounded-xl px-6 py-3 font-bold transition ${
+              className={
                 activeVideo.src === video.src
-                  ? "bg-yellow-500 text-black"
-                  : "bg-zinc-900 text-white border border-yellow-500/20"
-              }`}
+                  ? "rounded-xl px-6 py-3 font-bold bg-yellow-500 text-black"
+                  : "rounded-xl px-6 py-3 font-bold border border-yellow-500/20 bg-zinc-900 text-white"
+              }
             >
               {video.title}
             </button>
           ))}
         </div>
+
       </div>
     </section>
   );

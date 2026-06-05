@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FED UP",
+  title: "FEDUP",
   description: "Females Ending Defeat. Unleashing Purpose.",
 };
 

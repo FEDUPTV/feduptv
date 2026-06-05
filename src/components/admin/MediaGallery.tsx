@@ -26,7 +26,7 @@ export default function MediaGallery({
               >
                 <img
                   src={url}
-                  alt={`Applicant photo ${index + 1}`}
+                  alt={`Candidate photo ${index + 1}`}
                   className="h-36 w-full object-cover transition duration-300 group-hover:scale-105 md:h-44"
                 />
               </button>
@@ -57,7 +57,7 @@ export default function MediaGallery({
         >
           <img
             src={activePhoto}
-            alt="Applicant preview"
+            alt="Candidate preview"
             className="max-h-[90vh] max-w-[95vw] rounded-2xl object-contain"
           />
         </div>

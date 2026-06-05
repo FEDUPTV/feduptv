@@ -4,17 +4,35 @@ import FeaturedVideo from "../components/sections/FeaturedVideo";
 import CastingEvent from "../components/sections/CastingEvent";
 import Mission from "../components/sections/Mission";
 import AboutShow from "../components/sections/AboutShow";
+import CastingCall from "../components/sections/CastingCall";
+import AuditionInfo from "../components/sections/AuditionInfo";
 import FinalCTA from "../components/sections/FinalCTA";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+
       <Metrics />
+
       <FeaturedVideo />
+
       <CastingEvent />
+
       <Mission />
+
       <AboutShow />
+
+      
+
+      <CastingCall />
+
+      <AuditionInfo />
+
+      
+
+      
+
       <FinalCTA />
     </>
   );

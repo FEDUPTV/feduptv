@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     const result = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "FED UP <onboarding@resend.dev>",
+      from: process.env.RESEND_FROM_EMAIL || "FEDUP <onboarding@resend.dev>",
       to: body.to,
       subject: body.subject,
       html: `<div>${body.message}</div>`,

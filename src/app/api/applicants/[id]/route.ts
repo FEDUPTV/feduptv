@@ -54,7 +54,7 @@ export async function PATCH(
 
   const emailTemplate = getStatusEmail(
     body.status,
-    data.first_name || "Applicant"
+    data.first_name || "Candidate"
   );
 
   if (
@@ -66,7 +66,7 @@ export async function PATCH(
       await resend.emails.send({
         from:
           process.env.RESEND_FROM_EMAIL ||
-          "FED UP <onboarding@resend.dev>",
+          "FEDUP <onboarding@resend.dev>",
         to: data.email,
         subject: emailTemplate.subject,
         html: emailTemplate.html,

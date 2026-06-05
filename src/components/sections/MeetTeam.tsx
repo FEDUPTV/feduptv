@@ -26,7 +26,7 @@ export default function MeetTeam() {
         </p>
 
         <h2 className="text-5xl font-black text-center mb-12">
-          The People Behind FED UP
+          The People Behind FEDUP
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8">

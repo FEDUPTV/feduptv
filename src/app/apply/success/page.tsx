@@ -4,7 +4,7 @@ export default function SuccessPage() {
       <div className="max-w-2xl text-center p-8">
 
         <h1 className="text-5xl font-black text-yellow-500 mb-6">
-          Application Received
+          Audition Received
         </h1>
 
         <p className="text-xl text-gray-300">

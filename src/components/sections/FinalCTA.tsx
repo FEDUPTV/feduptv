@@ -2,29 +2,39 @@ import Link from "next/link";
 
 export default function FinalCTA() {
   return (
-    <section className="py-32 border-t border-yellow-500/20">
-      <div className="max-w-5xl mx-auto px-6 text-center">
+    <section className="relative overflow-hidden bg-black py-24 text-white">
 
-        <p className="text-yellow-500 uppercase tracking-[6px] mb-4">
-          Ready To Share Your Story?
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.18),transparent_60%)]" />
+
+      <div className="relative mx-auto max-w-5xl px-6 text-center">
+
+        <p className="mb-4 text-sm font-black uppercase tracking-[0.4em] text-yellow-500">
+          READY TO SHARE YOUR STORY?
         </p>
 
-        <h2 className="text-6xl font-black mb-8">
+        <h2 className="mb-8 text-5xl font-black md:text-7xl">
           Your Past Does Not Define You
         </h2>
 
-        <p className="text-xl text-gray-300 mb-12">
-          FED UP is seeking powerful women ready to
-          inspire, heal, and transform lives through
-          their story.
+        <p className="mx-auto mb-10 max-w-3xl text-xl text-gray-300">
+          FEDUP is seeking powerful women ready to inspire others and step into purpose.
         </p>
 
-        <Link
-          href="/apply"
-          className="inline-flex bg-yellow-500 text-black font-black px-10 py-5 rounded-full text-lg hover:scale-105 transition"
-        >
-          APPLY FOR FED UP
-        </Link>
+        <div className="flex flex-wrap justify-center gap-4">
+          <Link
+            href="/apply"
+            className="rounded-full bg-yellow-500 px-12 py-5 font-black text-black shadow-[0_0_40px_rgba(234,179,8,0.35)]"
+          >
+            SUBMIT YOUR STORY
+          </Link>
+
+          <Link
+            href="/contact"
+            className="rounded-full border border-yellow-500 px-12 py-5 font-black text-yellow-500"
+          >
+            CONTACT US
+          </Link>
+        </div>
 
       </div>
     </section>

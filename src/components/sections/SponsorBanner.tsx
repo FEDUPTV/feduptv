@@ -8,7 +8,7 @@ export default function SponsorBanner() {
         </p>
 
         <h2 className="text-4xl md:text-6xl font-black mb-6">
-          Partner With FED UP
+          Partner With FEDUP
         </h2>
 
         <p className="max-w-3xl mx-auto text-xl mb-10">

@@ -7,17 +7,17 @@ import {
 export default function SocialWall() {
   const socials = [
     {
-      title: "FED UP Instagram",
+      title: "FEDUP Instagram",
       icon: <FaInstagram size={32} />,
       link: "https://www.instagram.com/fedddup_",
     },
     {
-      title: "FED UP Facebook",
+      title: "FEDUP Facebook",
       icon: <FaFacebookF size={32} />,
       link: "https://www.facebook.com/FedUpRealitySeries",
     },
     {
-      title: "FED UP YouTube",
+      title: "FEDUP YouTube",
       icon: <FaYoutube size={32} />,
       link: "https://www.youtube.com/@FedUpRealitySeries",
     },
@@ -47,7 +47,7 @@ export default function SocialWall() {
         </p>
 
         <h2 className="text-5xl font-black text-center mb-12">
-          Connect With FED UP
+          Connect With FEDUP
         </h2>
 
         <div className="grid md:grid-cols-3 gap-6">
