@@ -34,7 +34,7 @@ function SocialIcon({
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className=" bg-black text-white">
       <section className="border-b border-yellow-500/20 px-6 py-14 text-center">
         <p className="mb-3 text-sm font-black tracking-[0.4em] text-yellow-500">
           CONTACT FEDUP
@@ -107,7 +107,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-20">
+      <section className="mx-auto max-w-7xl px-6 pb-8">
         <div className="mb-10 h-px bg-gradient-to-r from-transparent via-yellow-500 to-transparent" />
 
         <h2 className="mb-10 text-center text-5xl font-black text-yellow-500">
