@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 type Resource = {
   id: string;
   state: string;
-  county: string;
+  city: string;
   category: string;
   organization_name: string;
   description?: string;
@@ -16,187 +16,256 @@ type Resource = {
   last_verified?: string;
 };
 
+const HELP_CATEGORIES = [
+  "Housing",
+  "Employment",
+  "Food Assistance",
+  "Healthcare",
+  "Legal Aid",
+  "Recovery Programs",
+  "Mental Health",
+];
+
+const CATEGORY_ICONS: Record<string, string> = {
+  Housing: "🏠",
+  Employment: "💼",
+  "Food Assistance": "🍽",
+  Healthcare: "🏥",
+  "Legal Aid": "⚖️",
+  "Recovery Programs": "💊",
+  "Mental Health": "🧠",
+};
+
 export default function ResourcesPage() {
-  const [resources, setResources] = useState<Resource[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);  const [states, setStates] = useState<string[]>([]);
   const [state, setState] = useState("");
-  const [county, setCounty] = useState("");
+  const [city, setCity] = useState("");
   const [category, setCategory] = useState("");
+  const [cities, setCities] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-const [locationEnabled, setLocationEnabled] = useState(false);
+  const [searched, setSearched] = useState(false);
 
-  useEffect(() => {
-    async function loadResources() {
-      setLoading(true);
+  
+async function loadCities(selectedState: string) {
+  const res = await fetch(
+    `/api/cities?state=${encodeURIComponent(selectedState)}`
+  );
 
-      const params = new URLSearchParams();
+  const data = await res.json();
+  setCities(data.cities || []);
+}
 
-      if (state) params.set("state", state);
-      if (county) params.set("county", county);
-      if (category) params.set("category", category);
+async function loadResources(nextCategory = category) {
 
-      const response = await fetch(`/api/resources?${params.toString()}`);
-      const data = await response.json();
+    if (!state) return;
 
-      setResources(data.resources || []);
-      setLoading(false);
+    setLoading(true);
+    setSearched(true);
+
+    const params = new URLSearchParams();
+    params.set("state", state);
+    if (city) params.set("city", city);
+    if (nextCategory) params.set("category", nextCategory);
+
+    const response = await fetch(`/api/resources?${params.toString()}`);
+    const data = await response.json();
+
+    setResources(data.resources || []);
+    setLoading(false);
+  }
+
+  async function useMyLocation() {
+    if (!navigator.geolocation) {
+      alert("Location is not supported on this device. Please select your state manually.");
+      return;
     }
 
-    loadResources();
-  }, [state, county, category]);
+    navigator.geolocation.getCurrentPosition(
+      () => {
+        alert("Location access received. City auto-detection will be connected in the next update. Please select your state below for now.");
+      },
+      () => {
+        alert("Location access was denied. Please select your state manually.");
+      }
+    );
+  }
 
-  const states = useMemo(
-    () => [...new Set(resources.map((item) => item.state))].sort(),
-    [resources]
-  );
+  
+  useEffect(() => {
+    fetch("/api/states").then(r=>r.json()).then(d=>setStates(d.states||[]));
 
-  const counties = useMemo(
-    () =>
-      [
-        ...new Set(
-          resources
-            .filter((item) => !state || item.state === state)
-            .map((item) => item.county)
-        ),
-      ].sort(),
-    [resources, state]
-  );
 
-  const categories = useMemo(
-    () =>
-      [
-        ...new Set(
-          resources
-            .filter((item) => !state || item.state === state)
-            .filter((item) => !county || item.county === county)
-            .map((item) => item.category)
-        ),
-      ].sort(),
-    [resources, state, county]
-  );
+    if (state) {
+      loadResources("");
+    }
+  }, [state]);
 
   return (
-    <main className="min-h-screen bg-black px-6 py-16 text-white">
-      <div className="mx-auto max-w-7xl">
+    <main className="bg-black px-6 py-6 text-white">
+      <div className="mx-auto max-w-6xl text-center">
         <p className="mb-3 text-sm font-black uppercase tracking-[0.35em] text-yellow-500">
           FEDUP Resource Center
         </p>
 
-        <h1 className="mb-6 text-4xl font-black text-yellow-500 md:text-6xl">
-          Reentry Resources
+        <h1 className="mb-2 text-3xl font-black text-yellow-500 md:text-6xl">
+          Find Help Near You
         </h1>
 
-        <p className="mb-10 max-w-3xl text-lg leading-relaxed text-gray-300">
-          Find support by state, county, and need. This resource center is built
-          for women coming home from jail, prison, halfway houses, treatment
-          programs, or reentry situations.
+        <p className="mx-auto mb-8 max-w-3xl text-lg leading-relaxed text-gray-300">
+          Resources for women coming home from jail, prison, halfway houses,
+          treatment programs, or reentry situations.
         </p>
+        
+<div className="mb-8 flex justify-center">
+  <div className="rounded-full border border-yellow-500/20 bg-zinc-900 px-6 py-3 text-sm font-bold text-gray-300">
+    {states.length} States • {HELP_CATEGORIES.length} Categories
+  </div>
+</div>
 
-        <div className="mb-10 grid gap-4 rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6 md:grid-cols-3">
-          <select
-            value={state}
-            onChange={(e) => {
-              setState(e.target.value);
-              setCounty("");
-              setCategory("");
-            }}
-            className="rounded-lg border border-zinc-700 bg-black p-4 text-white"
-          >
-            <option value="">All States</option>
-            {states.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
 
-          <select
-            value={county}
-            onChange={(e) => {
-              setCounty(e.target.value);
-              setCategory("");
-            }}
-            className="rounded-lg border border-zinc-700 bg-black p-4 text-white"
-          >
-            <option value="">All Counties</option>
-            {counties.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
+          
 
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="rounded-lg border border-zinc-700 bg-black p-4 text-white"
+<div className="mb-8 rounded-xl border border-yellow-500/20 bg-zinc-900 p-4">
+          <button
+            onClick={useMyLocation}
+            className="mb-4 w-full rounded-xl bg-yellow-500 px-6 py-4 font-black text-black"
           >
-            <option value="">All Help Categories</option>
-            {categories.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
+            📍 Use My Location
+          </button>
+
+          <div className="mb-6 text-center font-black text-gray-400">OR</div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <select
+              value={state}
+              onChange={(e) => {
+                setState(e.target.value);
+                loadCities(e.target.value);
+                setCity("");
+                setCategory("");
+                setResources([]);
+                setSearched(false);
+              }}
+              className="rounded-lg border border-zinc-700 bg-black p-4 text-white"
+            >
+              <option value="">Select State</option>
+              {states.map((item) => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+
+            <select
+              value={city}
+              onChange={(e) => {
+                setCity(e.target.value);
+                setCategory("");
+              }}
+              className="rounded-lg border border-zinc-700 bg-black p-4 text-white"
+              disabled={!state}
+            >
+              <option value="">Select City</option>
+              {cities.map((item: any) => (
+                <option
+                  key={item.city}
+                  value={item.city}
+                >
+                  {item.city}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
+        {state && (
+          <div className="mb-8 rounded-xl border border-yellow-500/20 bg-zinc-900 p-4">
+            <h2 className="mb-4 text-xl font-black text-white">
+              What do you need help with?
+            </h2>
+
+            <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+              {HELP_CATEGORIES.map((item) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    setCategory(item);
+                    loadResources(item);
+                  }}
+                  className={
+                    category === item
+                      ? "rounded-lg bg-yellow-500 p-5 text-left font-black text-black"
+                      : "rounded-lg border border-yellow-500/20 bg-black p-5 text-left font-black text-white hover:border-yellow-500"
+                  }
+                >
+                  <span className="mr-2 text-2xl">{CATEGORY_ICONS[item]}</span>
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <p className="text-gray-400">Loading resources...</p>
-        ) : resources.length === 0 ? (
+        ) : searched && resources.length === 0 ? (
           <div className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-8 text-gray-300">
             No resources found yet for this search.
           </div>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2">
+        ) : resources.length > 0 ? (
+          <div className="grid gap-4 md:grid-cols-2">
             {resources.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6"
-              >
+              <div key={item.id} className="rounded-xl border border-yellow-500/20 bg-zinc-900 p-4">
                 <div className="mb-3 inline-block rounded-full bg-yellow-500 px-3 py-1 text-xs font-black uppercase text-black">
                   {item.category}
                 </div>
 
-                <h2 className="mb-2 text-2xl font-black text-white">
+                <h2 className="mb-2 text-xl font-black text-white">
                   {item.organization_name}
                 </h2>
 
-                <p className="mb-4 text-sm text-yellow-500">
-                  {item.county}, {item.state}
+                <p className="mb-3 text-xs uppercase tracking-wide text-yellow-500">
+                  {item.city ? `${item.city}, ${item.state}` : item.state}
                 </p>
 
-                {item.description && (
-                  <p className="mb-4 leading-relaxed text-gray-300">
-                    {item.description}
-                  </p>
-                )}
+                {item.description && <p className="mb-4 leading-relaxed text-gray-300">{item.description}</p>}
 
-                <div className="space-y-2 text-sm text-gray-300">
+                <div className="space-y-3 text-sm text-gray-300">
                   {item.phone && <p><strong>Phone:</strong> {item.phone}</p>}
                   {item.address && <p><strong>Address:</strong> {item.address}</p>}
                   {item.eligibility && <p><strong>Eligibility:</strong> {item.eligibility}</p>}
-                  {item.website && (
-                    <p>
-                      <strong>Website:</strong>{" "}
-                      <a
-                        href={item.website}
-                        target="_blank"
-                        className="text-yellow-500 underline"
-                      >
-                        Visit Resource
-                      </a>
-                    </p>
-                  )}
-                </div>
+                  {item.phone && (
+  <a
+    href={`tel:${item.phone}`}
+    className="rounded-lg bg-yellow-500 px-4 py-3 text-center font-bold text-black"
+  >
+    📞 Call
+  </a>
+)}
 
-                {item.last_verified && (
-                  <p className="mt-4 text-xs text-gray-500">
-                    Last verified: {item.last_verified}
-                  </p>
-                )}
+{item.website && (
+  <a
+    href={item.website}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="block rounded-lg border border-yellow-500 px-4 py-2 text-center font-bold text-yellow-500"
+  >
+    🌐 Website
+  </a>
+)}
+
+<a
+  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.organization_name)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="block rounded-lg border border-zinc-700 px-4 py-2 text-center font-bold text-white"
+>
+  📍 Directions
+</a>
+
+                </div>
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
     </main>
   );
