@@ -21,6 +21,7 @@ type FormData = {
   children: string;
   children_count: string;
   occupation: string;
+  unemployed: string;
   instagram: string;
   tiktok: string;
   facebook: string;
@@ -56,6 +57,7 @@ const initialFormData: FormData = {
   children: "",
   children_count: "",
   occupation: "",
+  unemployed: "",
   instagram: "",
   tiktok: "",
   facebook: "",
@@ -110,6 +112,7 @@ export default function ApplicationWizard() {
       1: [
         "first_name",
         "last_name",
+        "prison_name",
         "birthdate",
         "phone",
         "email",
@@ -144,6 +147,16 @@ export default function ApplicationWizard() {
         "can_travel_orlando"
       ]
     };
+
+
+    if (
+      step == 2 &&
+      formData.children === "yes" &&
+      !formData.children_count
+    ) {
+      alert("Please tell us how many children you have.");
+      return;
+    }
 
     const missing = requiredFields[step]?.filter(
       (field) =>
@@ -206,6 +219,41 @@ export default function ApplicationWizard() {
         return;
       }
 
+    }
+
+
+    if (
+      step === 2 &&
+      !formData.occupation &&
+      formData.unemployed !== "yes"
+    ) {
+      alert(
+        "Please enter your current job/business or check unemployed."
+      );
+      return;
+    }
+
+
+    if (
+      step === 2 &&
+      !formData.occupation &&
+      formData.unemployed !== "yes"
+    ) {
+      alert(
+        "Please enter your current job/business or check unemployed."
+      );
+      return;
+    }
+
+    if (
+      step === 2 &&
+      formData.children === "yes" &&
+      !formData.children_count
+    ) {
+      alert(
+        "Please tell us how many children you have."
+      );
+      return;
     }
 
     if (step === 1) {
@@ -282,8 +330,6 @@ export default function ApplicationWizard() {
 
       localStorage.removeItem(STORAGE_KEY);
 
-      alert("Application submitted successfully.");
-
       window.location.href = "/apply/success";
 
     } catch (error) {
@@ -304,10 +350,40 @@ export default function ApplicationWizard() {
   const labelClass = "mb-2 block text-sm font-bold text-white";
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-20">
-      <div className="mb-10">
+    <div className="mx-auto max-w-5xl px-6 pt-10 pb-8">
+      <div className="mb-6">
 
-        <div className="mb-8 rounded-xl border border-yellow-500/20 bg-zinc-900 p-5">
+        
+        </div>
+        <p className="mb-3 text-sm font-black uppercase tracking-[0.35em] text-yellow-500">
+          Cast Member Inquiry
+        </p>
+
+        <h1 className="mb-6 text-4xl font-black text-yellow-500 md:text-6xl">
+          FEDUP Casting Application
+        </h1>
+
+        <div className="mb-6 rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6">
+          <p className="mb-4 text-lg leading-relaxed text-gray-300">
+            Thank you for your interest in the FEDUP Reality TV Series. We are
+            happy to have the opportunity to hear your story.
+          </p>
+
+          <p className="mb-4 text-lg leading-relaxed text-gray-300">
+            FEDUP stands for Females Ending Defeat. Unleashing Purpose. This
+            reality television series showcases the story, redemption,
+            resilience, and transformation of women who have served time in
+            prison and are rebuilding their lives.
+          </p>
+
+          <p className="text-lg leading-relaxed text-gray-300">
+            Please complete the application below if you would like to audition
+            for a chance to be selected as a cast member for the FEDUP Reality
+            TV Series.
+          </p>
+        </div>
+
+<div className="mb-8 rounded-xl border border-yellow-500/20 bg-zinc-900 p-5">
           <div className="grid gap-3 md:grid-cols-6 text-center text-sm font-bold">
 
             <div className={step >= 1 ? "text-green-400" : "text-gray-500"}>
@@ -335,53 +411,10 @@ export default function ApplicationWizard() {
             </div>
 
           </div>
-        </div>
-        <p className="mb-3 text-sm font-black uppercase tracking-[0.35em] text-yellow-500">
-          Cast Member Inquiry
-        </p>
 
-        <h1 className="mb-6 text-4xl font-black text-yellow-500 md:text-6xl">
-          FEDUP Casting Application
-        </h1>
-
-        <div className="mb-8 rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6">
-          <p className="mb-4 text-lg leading-relaxed text-gray-300">
-            Thank you for your interest in the FEDUP Reality TV Series. We are
-            happy to have the opportunity to hear your story.
-          </p>
-
-          <p className="mb-4 text-lg leading-relaxed text-gray-300">
-            FEDUP stands for Females Ending Defeat. Unleashing Purpose. This
-            reality television series showcases the story, redemption,
-            resilience, and transformation of women who have served time in
-            prison and are rebuilding their lives.
-          </p>
-
-          <p className="text-lg leading-relaxed text-gray-300">
-            Please complete the application below if you would like to audition
-            for a chance to be selected as a cast member for the FEDUP Reality
-            TV Series.
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-yellow-500/20 bg-zinc-900 p-4">
-          <div className="mb-2 flex justify-between text-sm text-gray-400">
-            <span>Application Progress</span>
-            <span>
-              Step {step} of {TOTAL_STEPS}
-            </span>
-          </div>
-
-          <div className="h-3 overflow-hidden rounded-full bg-zinc-800">
-            <div
-              className="h-full bg-yellow-500 transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
       </div>
 
-      <div className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-8">
+      <div className="mt-4 rounded-2xl border border-yellow-500/20 bg-zinc-900 p-8">
         {step === 1 && (
           <div>
             <h2 className="mb-3 text-3xl font-black text-white">
@@ -416,7 +449,7 @@ export default function ApplicationWizard() {
 
               <div className="md:col-span-2">
                 <label className={labelClass}>
-                  Name You Were Called In Prison
+                  Name You Were Called In Prison *
                 </label>
                 <input
                   value={formData.prison_name}
@@ -620,7 +653,8 @@ export default function ApplicationWizard() {
                   className={inputClass}
                 >
                   <option value="">Select One</option>
-                  <option value="yes">I Confirm</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
                 </select>
               </div>
 
@@ -996,7 +1030,8 @@ export default function ApplicationWizard() {
                   className={inputClass}
                 >
                   <option value="">Select One</option>
-                  <option value="yes">I Confirm</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
                 </select>
               </div>
 
@@ -1013,7 +1048,8 @@ export default function ApplicationWizard() {
                   className={inputClass}
                 >
                   <option value="">Select One</option>
-                  <option value="yes">I Confirm</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
                 </select>
               </div>
 
@@ -1154,14 +1190,15 @@ export default function ApplicationWizard() {
         )}
       </div>
 
-      <div className="mt-8 flex justify-between">
-        <button
-          disabled={step === 1}
-          onClick={goBack}
-          className="rounded bg-zinc-800 px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Back
-        </button>
+      <div className="mt-4 flex items-center justify-end">
+        {step > 1 && (
+          <button
+            onClick={goBack}
+            className="rounded bg-zinc-800 px-6 py-3 font-bold text-white"
+          >
+            Back
+          </button>
+        )}
 
         {step < TOTAL_STEPS && (
           <button

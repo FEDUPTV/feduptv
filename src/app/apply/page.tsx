@@ -2,7 +2,7 @@ import ApplicationWizard from "../../components/forms/ApplicationWizard";
 
 export default function ApplyPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="bg-black text-white pb-8">
       <ApplicationWizard />
     </main>
   );
