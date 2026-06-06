@@ -333,7 +333,7 @@ export default function ApplicationWizard() {
 
       if (selectedFiles.length > 10) { alert("Maximum 10 photos allowed."); setSubmitting(false); return; }
 
-      const invalidFile = selectedFiles.find((file: File) => file.type.startsWith("video/") ? file.size > 50 * 1024 * 1024 : file.size > 10 * 1024 * 1024); if (invalidFile) { alert(invalidFile.type.startsWith("video/") ? "Videos must be under 50MB." : "Photos must be under 10MB."); setSubmitting(false); return; }
+      if (selectedFiles.some((file: File) => file.size > 10 * 1024 * 1024)) { alert("Each file must be under 10MB."); setSubmitting(false); return; }
 
       const payload = new FormData();
 
@@ -344,7 +344,16 @@ export default function ApplicationWizard() {
           payload.append("files", file);
         });
       }
-const response = await fetch("/api/apply", {
+
+      if (!files || files.length === 0) {
+        alert(
+          "Please upload at least one photo or video before submitting."
+        );
+        setSubmitting(false);
+        return;
+      }
+
+      const response = await fetch("/api/apply", {
         method: "POST",
         body: payload,
       });
@@ -1239,6 +1248,4 @@ const response = await fetch("/api/apply", {
     </div>
   );
 }
-
-
 
