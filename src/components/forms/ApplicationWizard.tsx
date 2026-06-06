@@ -361,7 +361,7 @@ const response = await fetch("/api/apply", {
 
     } catch (error) {
       console.error(error);
-      alert("Failed to submit application.");
+      alert(error instanceof Error ? error.message : "Submission failed.");
       setSubmitting(false);
     }
   };
@@ -1239,6 +1239,7 @@ const response = await fetch("/api/apply", {
     </div>
   );
 }
+
 
 
 
