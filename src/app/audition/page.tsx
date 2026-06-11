@@ -40,16 +40,38 @@ export default function AuditionPage() {
               <p className="font-bold text-yellow-500">
                 Hotel discount information is provided to registered applicants.
               </p>
+              <p className="mt-2 text-sm text-gray-300">
+                If the Hilton event page does not load, call the hotel directly
+                and ask for the FEDUP July 2026 Auditions room block.
+              </p>
             </div>
 
-            <a
-              href="https://www.hilton.com/en/attend-my-event/fed-up-july-2026-auditions/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-block rounded-lg bg-yellow-500 px-6 py-3 font-black text-black"
-            >
-              Hotel Information
-            </a>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="tel:+14073521400"
+                className="inline-block rounded-lg bg-yellow-500 px-6 py-3 text-center font-black text-black"
+              >
+                Call Hotel
+              </a>
+
+              <a
+                href="https://www.hilton.com/en/hotels/orlies-embassy-suites-orlando-international-drive-convention-center/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-lg border border-yellow-500 px-6 py-3 text-center font-black text-yellow-500"
+              >
+                Hotel Website
+              </a>
+
+              <a
+                href="https://www.hilton.com/en/attend-my-event/fed-up-july-2026-auditions/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-lg border border-zinc-700 px-6 py-3 text-center font-bold text-gray-300"
+              >
+                Event Link
+              </a>
+            </div>
           </section>
 
           <section className="rounded-xl border border-yellow-500/20 bg-zinc-900 p-6">
