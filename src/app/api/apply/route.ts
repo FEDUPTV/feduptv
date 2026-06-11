@@ -26,6 +26,23 @@ function isBadEmail(email: string) {
   );
 }
 
+function formatTimeServed(years: unknown, months: unknown) {
+  const yearCount = toInt(years) || 0;
+  const monthCount = toInt(months) || 0;
+
+  const parts = [];
+
+  if (yearCount > 0) {
+    parts.push(`${yearCount} year${yearCount === 1 ? "" : "s"}`);
+  }
+
+  if (monthCount > 0) {
+    parts.push(`${monthCount} month${monthCount === 1 ? "" : "s"}`);
+  }
+
+  return parts.length ? parts.join(", ") : "0 months";
+}
+
 async function findBannedApplicant(email: string, phone: string) {
   const emailQuery = supabaseAdmin
     .from("banned_applicants")
@@ -134,6 +151,21 @@ export async function POST(request: Request) {
       );
     }
 
+    if (
+      body.agree_privacy !== "yes" ||
+      body.agree_release !== "yes" ||
+      body.agree_terms !== "yes" ||
+      body.agree_truthful !== "yes"
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Applicant agreements are required.",
+        },
+        { status: 400 }
+      );
+    }
+
     const cleanPhone =
       String(body.phone || "").replace(/\D/g, "");
 
@@ -217,6 +249,11 @@ export async function POST(request: Request) {
       (body.can_travel_orlando === "yes" ? 15 : 0) +
       (duplicateFlag ? -20 : 0);
 
+    const timeServed = formatTimeServed(
+      body.time_served_years,
+      body.time_served_months
+    );
+
     const { data, error } =
       await supabaseAdmin
         .from("applicants")
@@ -234,7 +271,7 @@ export async function POST(request: Request) {
             address: body.address,
 
             charges: body.charges,
-            time_served: body.time_served,
+            time_served: timeServed,
             jurisdiction: body.jurisdiction,
 
             children: body.children,

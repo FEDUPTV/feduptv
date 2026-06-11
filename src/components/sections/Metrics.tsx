@@ -1,8 +1,8 @@
 const metrics = [
-  { number: "USA", label: "Nationwide Casting" },
-  { number: "REAL", label: "Stories" },
-  { number: "NOW", label: "Auditions Open" },
-  { number: "JULY 11", label: "Orlando Event" },
+  { number: "1", label: "Complete Application" },
+  { number: "2", label: "Share Your Story" },
+  { number: "3", label: "Upload Media" },
+  { number: "JULY 11", label: "Orlando Audition" },
 ];
 
 export default function Metrics() {

@@ -1,5 +1,5 @@
 const LOGO =
-  "https://feduptv.com/images/logo.png";
+  "https://feduptv.com/images/fedup_logo.png";
 
 const INSTAGRAM =
   "https://www.instagram.com/fedddup_";

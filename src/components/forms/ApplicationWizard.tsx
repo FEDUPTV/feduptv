@@ -94,16 +94,24 @@ export default function ApplicationWizard() {
   });
   const [files, setFiles] = useState<FileList | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, [formData]);
 
   const updateField = (field: keyof FormData, value: string) => {
+    if (formError) setFormError("");
+
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const showError = (message: string) => {
+    setFormError(message);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const getAgeFromBirthdate = (birthdate: string) => {
@@ -124,6 +132,7 @@ export default function ApplicationWizard() {
   };
 
   const goNext = () => {
+    setFormError("");
 
     const requiredFields: Record<number, (keyof FormData)[]> = {
       1: [
@@ -171,7 +180,7 @@ export default function ApplicationWizard() {
       formData.children === "yes" &&
       !formData.children_count
     ) {
-      alert("Please tell us how many children you have.");
+      showError("Please tell us how many children you have.");
       return;
     }
 
@@ -186,14 +195,12 @@ export default function ApplicationWizard() {
       formData.children === "yes" &&
       !formData.children_count
     ) {
-      alert("Please select how many children you have.");
+      showError("Please select how many children you have.");
       return;
     }
 
     if (missing?.length) {
-      alert(
-        "Please complete all required fields before continuing."
-      );
+      showError("Please complete all required fields before continuing.");
       return;
     }
 
@@ -204,9 +211,7 @@ export default function ApplicationWizard() {
         !formData.tiktok.trim() &&
         !formData.facebook.trim()
       ) {
-        alert(
-          "Please provide at least one social media profile."
-        );
+        showError("Please provide at least one social media profile.");
         return;
       }
     }
@@ -230,9 +235,7 @@ export default function ApplicationWizard() {
       );
 
       if (tooShort) {
-        alert(
-          "Story responses must be at least 100 characters."
-        );
+        showError("Story responses must be at least 100 characters.");
         return;
       }
 
@@ -244,9 +247,7 @@ export default function ApplicationWizard() {
       !formData.occupation &&
       formData.unemployed !== "yes"
     ) {
-      alert(
-        "Please enter your current job/business or check unemployed."
-      );
+      showError("Please enter your current job/business or check unemployed.");
       return;
     }
 
@@ -256,9 +257,7 @@ export default function ApplicationWizard() {
       !formData.occupation &&
       formData.unemployed !== "yes"
     ) {
-      alert(
-        "Please enter your current job/business or check unemployed."
-      );
+      showError("Please enter your current job/business or check unemployed.");
       return;
     }
 
@@ -267,9 +266,7 @@ export default function ApplicationWizard() {
       formData.children === "yes" &&
       !formData.children_count
     ) {
-      alert(
-        "Please tell us how many children you have."
-      );
+      showError("Please tell us how many children you have.");
       return;
     }
 
@@ -284,22 +281,22 @@ export default function ApplicationWizard() {
         applicantAge < 18 ||
         applicantAge > 80
       ) {
-        alert("Applicants must be between 18 and 80 years old.");
+        showError("Applicants must be between 18 and 80 years old.");
         return;
       }
 
       if (phoneDigits.length !== 10) {
-        alert("Please enter a valid phone number in this format: (813) 555-1234");
+        showError("Please enter a valid phone number in this format: (813) 555-1234");
         return;
       }
 
       if (!emailRegex.test(formData.email.trim().toLowerCase())) {
-        alert("Please enter a valid email address.");
+        showError("Please enter a valid email address.");
         return;
       }
 
       if (formData.address_verified !== "yes") {
-        alert("Please select a verified address from the Google suggestions.");
+        showError("Please enter your complete mailing address.");
         return;
       }
     }
@@ -324,16 +321,50 @@ export default function ApplicationWizard() {
 
     if (submitting) return;
 
+    setFormError("");
     setSubmitting(true);
 
     try {
-      if (!files || files.length === 0) { alert("Please upload at least one photo before submitting."); setSubmitting(false); return; }
+      if (
+        formData.agree_privacy !== "yes" ||
+        formData.agree_release !== "yes" ||
+        formData.agree_terms !== "yes" ||
+        formData.agree_truthful !== "yes"
+      ) {
+        showError("Please review and accept all applicant agreements before submitting.");
+        setSubmitting(false);
+        return;
+      }
+
+      if (!files || files.length === 0) {
+        showError("Please upload at least one photo or video before submitting.");
+        setSubmitting(false);
+        return;
+      }
 
       const selectedFiles = Array.from(files);
 
-      if (selectedFiles.length > 10) { alert("Maximum 10 photos allowed."); setSubmitting(false); return; }
+      if (selectedFiles.length > 10) {
+        showError("Maximum 10 files allowed.");
+        setSubmitting(false);
+        return;
+      }
 
-      const invalidFile = selectedFiles.find((file: File) => file.type.startsWith("video/") ? file.size > 50 * 1024 * 1024 : file.size > 10 * 1024 * 1024); if (invalidFile) { alert(invalidFile.type.startsWith("video/") ? "Videos must be under 50MB." : "Photos must be under 10MB."); setSubmitting(false); return; }
+      const invalidFile = selectedFiles.find((file: File) =>
+        file.type.startsWith("video/")
+          ? file.size > 50 * 1024 * 1024
+          : file.size > 10 * 1024 * 1024
+      );
+
+      if (invalidFile) {
+        showError(
+          invalidFile.type.startsWith("video/")
+            ? "Videos must be under 50MB."
+            : "Photos must be under 10MB."
+        );
+        setSubmitting(false);
+        return;
+      }
 
       const payload = new FormData();
 
@@ -361,7 +392,7 @@ const response = await fetch("/api/apply", {
 
     } catch (error) {
       console.error(error);
-      alert(error instanceof Error ? error.message : "Submission failed.");
+      showError(error instanceof Error ? error.message : "Submission failed.");
       setSubmitting(false);
     }
   };
@@ -376,6 +407,15 @@ const response = await fetch("/api/apply", {
 
   return (
     <div className="mx-auto max-w-5xl px-6 pt-10 pb-8">
+      {formError && (
+        <div
+          role="alert"
+          className="mb-6 rounded-xl border border-red-500/40 bg-red-950/60 p-4 font-bold text-red-100"
+        >
+          {formError}
+        </div>
+      )}
+
       <div className="mb-6">
 
         
@@ -455,20 +495,24 @@ const response = await fetch("/api/apply", {
               <div>
                 <label className={labelClass}>First Name *</label>
                 <input
+                  name="given-name"
                   value={formData.first_name}
                   onChange={(e) => updateField("first_name", e.target.value)}
                   className={inputClass}
                   placeholder="First Name" autoComplete="given-name"
+                  enterKeyHint="next"
                 />
               </div>
 
               <div>
                 <label className={labelClass}>Last Name *</label>
                 <input
+                  name="family-name"
                   value={formData.last_name}
                   onChange={(e) => updateField("last_name", e.target.value)}
                   className={inputClass}
                   placeholder="Last Name" autoComplete="family-name"
+                  enterKeyHint="next"
                 />
               </div>
 
@@ -477,10 +521,12 @@ const response = await fetch("/api/apply", {
                   Name You Were Called In Prison *
                 </label>
                 <input
+                  name="nickname"
                   value={formData.prison_name}
                   onChange={(e) => updateField("prison_name", e.target.value)}
                   className={inputClass}
                   placeholder="Prison Name / Nickname" autoComplete="nickname"
+                  enterKeyHint="next"
                 />
               </div>
 
@@ -488,6 +534,7 @@ const response = await fetch("/api/apply", {
                 <label className={labelClass}>Birthdate *</label>
 
                 <input
+                  name="bday"
                   type="date"
                   value={formData.birthdate}
                   onChange={(e) => updateField("birthdate", e.target.value)}
@@ -516,6 +563,7 @@ const response = await fetch("/api/apply", {
               <div>
                 <label className={labelClass}>Phone Number *</label>
                 <input
+                  name="tel"
                   value={formData.phone}
                   onChange={(e) => {
                     let value = e.target.value.replace(/\D/g, "");
@@ -536,12 +584,15 @@ const response = await fetch("/api/apply", {
                   }}
                   className={inputClass}
                   placeholder="(813) 555-1234" autoComplete="tel"
+                  inputMode="tel"
+                  enterKeyHint="next"
                 />
               </div>
 
               <div>
                 <label className={labelClass}>Email *</label>
                 <input
+                  name="email"
                   type="email"
                   value={formData.email}
                   onChange={(e) =>
@@ -549,6 +600,8 @@ const response = await fetch("/api/apply", {
                   }
                   className={inputClass}
                   placeholder="name@email.com" autoComplete="email"
+                  inputMode="email"
+                  enterKeyHint="next"
                 />
               </div>
 
@@ -556,6 +609,7 @@ const response = await fetch("/api/apply", {
                 <label className={labelClass}>Address *</label>
                 
 <input
+  name="street-address"
   value={formData.address}
   onChange={(e) => {
     updateField("address", e.target.value);
@@ -563,6 +617,7 @@ const response = await fetch("/api/apply", {
   }}
   className={inputClass}
   placeholder="Street Address, City, State" autoComplete="street-address"
+  enterKeyHint="next"
 />
 
 <p className="mt-2 text-sm text-gray-500">
@@ -589,6 +644,7 @@ const response = await fetch("/api/apply", {
               <div>
                 <label className={labelClass}>What were you charged with? *</label>
                 <textarea
+                  name="charges"
                   value={formData.charges}
                   onChange={(e) => updateField("charges", e.target.value)}
                   className={textareaClass}
@@ -604,6 +660,7 @@ const response = await fetch("/api/apply", {
                 <div className="grid gap-4 md:grid-cols-2">
 
                   <select
+                    name="time-served-years"
                     value={formData.time_served_years}
                     onChange={(e) =>
                       updateField("time_served_years", e.target.value)
@@ -619,6 +676,7 @@ const response = await fetch("/api/apply", {
                   </select>
 
                   <select
+                    name="time-served-months"
                     value={formData.time_served_months}
                     onChange={(e) =>
                       updateField("time_served_months", e.target.value)
@@ -642,6 +700,7 @@ const response = await fetch("/api/apply", {
                 </label>
 
                 <select
+                  name="jurisdiction"
                   value={formData.jurisdiction}
                   onChange={(e) =>
                     updateField("jurisdiction", e.target.value)
@@ -673,6 +732,7 @@ const response = await fetch("/api/apply", {
               <div>
                 <label className={labelClass}>Do you have children? *</label>
                 <select
+                  name="children"
                   value={formData.children}
                   onChange={(e) => updateField("children", e.target.value)}
                   className={inputClass}
@@ -690,6 +750,7 @@ const response = await fetch("/api/apply", {
                   </label>
 
                   <select
+                    name="children-count"
                     value={formData.children_count}
                     onChange={(e) =>
                       updateField("children_count", e.target.value)
@@ -710,10 +771,13 @@ const response = await fetch("/api/apply", {
               <div>
                 <label className={labelClass}>What is your current job? </label>
                 <input
+                  name="organization-title"
                   value={formData.occupation}
                   onChange={(e) => updateField("occupation", e.target.value)}
                   className={inputClass}
                   placeholder="Current job or occupation"
+                  autoComplete="organization-title"
+                  enterKeyHint="next"
                 />
               </div>
             </div>
@@ -735,30 +799,39 @@ const response = await fetch("/api/apply", {
               <div>
                 <label className={labelClass}>Instagram Handle</label>
                 <input
+                  name="instagram"
                   value={formData.instagram}
                   onChange={(e) => updateField("instagram", e.target.value)}
                   className={inputClass}
                   placeholder="@yourname"
+                  autoComplete="url"
+                  enterKeyHint="next"
                 />
               </div>
 
               <div>
                 <label className={labelClass}>TikTok Handle</label>
                 <input
+                  name="tiktok"
                   value={formData.tiktok}
                   onChange={(e) => updateField("tiktok", e.target.value)}
                   className={inputClass}
                   placeholder="@yourname"
+                  autoComplete="url"
+                  enterKeyHint="next"
                 />
               </div>
 
               <div>
                 <label className={labelClass}>Facebook Profile</label>
                 <input
+                  name="facebook"
                   value={formData.facebook}
                   onChange={(e) => updateField("facebook", e.target.value)}
                   className={inputClass}
                   placeholder="Facebook profile name or link"
+                  autoComplete="url"
+                  enterKeyHint="next"
                 />
               </div>
             </div>
@@ -783,10 +856,12 @@ const response = await fetch("/api/apply", {
                   cost you emotionally, mentally, and financially? *
                 </label>
                 <textarea
+                  name="fed-up-story"
                   value={formData.fed_up_story}
                   onChange={(e) => updateField("fed_up_story", e.target.value)}
                   className={textareaClass}
                   placeholder="Tell us what you are FEDUP with..."
+                  enterKeyHint="next"
                 />
 
                 <p
@@ -813,12 +888,14 @@ const response = await fetch("/api/apply", {
                   or underestimated. *
                 </label>
                 <textarea
+                  name="underestimated-story"
                   value={formData.underestimated_story}
                   onChange={(e) =>
                     updateField("underestimated_story", e.target.value)
                   }
                   className={textareaClass}
                   placeholder="What happened and how did you respond?"
+                  enterKeyHint="next"
                 />
 
                 <p
@@ -845,12 +922,14 @@ const response = await fetch("/api/apply", {
                   people most about you? *
                 </label>
                 <textarea
+                  name="shocking-truth"
                   value={formData.shocking_truth}
                   onChange={(e) =>
                     updateField("shocking_truth", e.target.value)
                   }
                   className={textareaClass}
                   placeholder="What would surprise people?"
+                  enterKeyHint="next"
                 />
 
                 <p
@@ -892,12 +971,14 @@ const response = await fetch("/api/apply", {
                   you avoided dealing with it until now? *
                 </label>
                 <textarea
+                  name="confrontation-story"
                   value={formData.confrontation_story}
                   onChange={(e) =>
                     updateField("confrontation_story", e.target.value)
                   }
                   className={textareaClass}
                   placeholder="Who or what are you ready to confront?"
+                  enterKeyHint="next"
                 />
 
                 <p
@@ -923,12 +1004,14 @@ const response = await fetch("/api/apply", {
                   Why should we choose you over other women? *
                 </label>
                 <textarea
+                  name="selection-reason"
                   value={formData.selection_reason}
                   onChange={(e) =>
                     updateField("selection_reason", e.target.value)
                   }
                   className={textareaClass}
                   placeholder="Why should producers select you?"
+                  enterKeyHint="next"
                 />
 
                 <p
@@ -955,12 +1038,14 @@ const response = await fetch("/api/apply", {
                   scrolling and watch? *
                 </label>
                 <textarea
+                  name="scroll-stopper-story"
                   value={formData.scroll_stopper_story}
                   onChange={(e) =>
                     updateField("scroll_stopper_story", e.target.value)
                   }
                   className={textareaClass}
                   placeholder="What makes your story unforgettable?"
+                  enterKeyHint="next"
                 />
 
                 <p
@@ -991,6 +1076,7 @@ const response = await fetch("/api/apply", {
                 </div>
 
                 <input
+                  name="prison-story-rating"
                   type="range"
                   min="1"
                   max="5"
@@ -1027,6 +1113,7 @@ const response = await fetch("/api/apply", {
               </label>
 
               <input
+                name="applicant-media"
                 type="file"
                 multiple
                 accept="image/*,video/*"
@@ -1050,6 +1137,7 @@ const response = await fetch("/api/apply", {
               <div>
                 <label className={labelClass}>I confirm I am legally eligible to participate in this casting process and understand applicants must be at least 18 years old. *</label>
                 <select
+                  name="over-18"
                   value={formData.over_18}
                   onChange={(e) => updateField("over_18", e.target.value)}
                   className={inputClass}
@@ -1066,6 +1154,7 @@ const response = await fetch("/api/apply", {
                   an in-person audition? *
                 </label>
                 <select
+                  name="can-travel-orlando"
                   value={formData.can_travel_orlando}
                   onChange={(e) =>
                     updateField("can_travel_orlando", e.target.value)
@@ -1084,12 +1173,14 @@ const response = await fetch("/api/apply", {
                   about you?
                 </label>
                 <textarea
+                  name="producer-notes"
                   value={formData.producer_notes}
                   onChange={(e) =>
                     updateField("producer_notes", e.target.value)
                   }
                   className={textareaClass}
                   placeholder="Share anything else producers should know..."
+                  enterKeyHint="done"
                 />
               </div>
 
@@ -1117,6 +1208,7 @@ const response = await fetch("/api/apply", {
 
                 <label className="flex gap-3 text-gray-300">
                   <input
+                    name="agree-privacy"
                     type="checkbox"
                     checked={formData.agree_privacy === "yes"}
                     onChange={(e) =>
@@ -1134,6 +1226,7 @@ const response = await fetch("/api/apply", {
 
                 <label className="flex gap-3 text-gray-300">
                   <input
+                    name="agree-release"
                     type="checkbox"
                     checked={formData.agree_release === "yes"}
                     onChange={(e) =>
@@ -1151,6 +1244,7 @@ const response = await fetch("/api/apply", {
 
                 <label className="flex gap-3 text-gray-300">
                   <input
+                    name="agree-terms"
                     type="checkbox"
                     checked={formData.agree_terms === "yes"}
                     onChange={(e) =>
@@ -1169,6 +1263,7 @@ const response = await fetch("/api/apply", {
 
                 <label className="flex gap-3 text-gray-300">
                   <input
+                    name="agree-truthful"
                     type="checkbox"
                     checked={formData.agree_truthful === "yes"}
                     onChange={(e) =>

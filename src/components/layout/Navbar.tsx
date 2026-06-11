@@ -13,7 +13,7 @@ export default function Navbar() {
       <nav className="mx-auto flex items-center justify-between px-4 py-3 md:max-w-7xl md:px-6">
         <Link href="/">
           <Image
-            src="/images/logo.png"
+            src="/images/fedup_logo.png"
             alt="FEDUP"
             width={60}
             height={60}

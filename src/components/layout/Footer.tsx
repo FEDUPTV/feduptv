@@ -11,7 +11,7 @@ export default function Footer() {
 
           <div>
             <Image
-              src="/images/logo.png"
+              src="/images/fedup_logo.png"
               alt="FEDUP"
               width={60}
               height={60}

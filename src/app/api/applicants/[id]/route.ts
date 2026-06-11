@@ -4,12 +4,6 @@ import { resend } from "../../../../lib/resend";
 import { getStatusEmail } from "../../../../lib/emailTemplates";
 import { isPortalAuthenticated, unauthorized } from "../../../../lib/portalAuth";
 
-function toInt(value: unknown) {
-  if (value === "" || value === undefined || value === null) return null;
-  const parsed = Number(value);
-  return Number.isNaN(parsed) ? null : parsed;
-}
-
 export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
@@ -44,14 +38,21 @@ export async function PATCH(
 
   const { id } = await context.params;
   const body = await request.json();
+  const updates: Record<string, unknown> = {};
+
+  if ("status" in body) updates.status = body.status;
+  if ("producer_notes" in body) updates.producer_notes = body.producer_notes;
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json(
+      { success: false, error: "No updates provided." },
+      { status: 400 }
+    );
+  }
 
   const { data, error } = await supabaseAdmin
     .from("applicants")
-    .update({
-      status: body.status,
-      producer_notes: body.producer_notes,
-      casting_score: toInt(body.casting_score),
-    })
+    .update(updates)
     .eq("id", id)
     .select()
     .single();
@@ -63,10 +64,10 @@ export async function PATCH(
     );
   }
 
-  const emailTemplate = getStatusEmail(
-    body.status,
-    data.first_name || "Candidate"
-  );
+  const emailTemplate =
+    "status" in body
+      ? getStatusEmail(body.status, data.first_name || "Candidate")
+      : null;
 
   if (
     emailTemplate &&

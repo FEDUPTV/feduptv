@@ -38,10 +38,9 @@ export default function FeaturedVideo() {
           key={activeVideo.src}
           src={activeVideo.src}
           controls
-          autoPlay
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           onEnded={nextVideo}
           className="w-full rounded-xl md:rounded-2xl border border-yellow-500/20"
         />
