@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../../../lib/supabase-admin";
+import { isPortalAuthenticated, unauthorized } from "../../../../../lib/portalAuth";
 
 export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   const { id } = await context.params;
   const body = await request.json();
 

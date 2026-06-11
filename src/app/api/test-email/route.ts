@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { resend } from "../../../lib/resend";
+import { isPortalAuthenticated, unauthorized } from "../../../lib/portalAuth";
 
 export async function GET() {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   try {
     const result = await resend.emails.send({
       from: "FEDUP <noreply@feduptv.com>",
@@ -16,11 +19,9 @@ export async function GET() {
       `,
     });
 
-    console.log("RESEND SUCCESS:", result);
-
     return NextResponse.json({
       success: true,
-      result,
+      id: result.data?.id,
     });
   } catch (error) {
     console.error("RESEND ERROR:", error);
@@ -28,7 +29,7 @@ export async function GET() {
     return NextResponse.json(
       {
         success: false,
-        error,
+        error: "Email test failed.",
       },
       { status: 500 }
     );

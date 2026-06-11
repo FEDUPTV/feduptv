@@ -10,7 +10,7 @@ export default function CastingCall() {
           </p>
 
           <h2 className="text-4xl md:text-6xl font-black text-white mb-6">
-            Who We're Looking For
+            Who We&apos;re Looking For
           </h2>
 
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">

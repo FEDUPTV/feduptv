@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../../lib/supabase-admin";
 import { resend } from "../../../../lib/resend";
 import { getStatusEmail } from "../../../../lib/emailTemplates";
+import { isPortalAuthenticated, unauthorized } from "../../../../lib/portalAuth";
 
 function toInt(value: unknown) {
   if (value === "" || value === undefined || value === null) return null;
@@ -13,6 +14,8 @@ export async function GET(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   const { id } = await context.params;
 
   const { data, error } = await supabaseAdmin
@@ -37,6 +40,8 @@ export async function PATCH(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   const { id } = await context.params;
   const body = await request.json();
 
@@ -51,10 +56,12 @@ export async function PATCH(
     .select()
     .single();
 
-
-  console.log("STATUS CHANGE:", body.status);
-
-  console.log("APPLICANT EMAIL:", data?.email);
+  if (error) {
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
 
   const emailTemplate = getStatusEmail(
     body.status,
@@ -67,8 +74,7 @@ export async function PATCH(
     process.env.RESEND_API_KEY
   ) {
     try {
-      console.log("SENDING STATUS EMAIL TO:", data.email);
-      const emailResult = await resend.emails.send({
+      await resend.emails.send({
         from:
           process.env.RESEND_FROM_EMAIL ||
           "FEDUP Casting <casting@feduptv.com>",
@@ -76,19 +82,9 @@ export async function PATCH(
         subject: emailTemplate.subject,
         html: emailTemplate.html,
       });
-
-      console.log("STATUS EMAIL RESULT:", emailResult);
     } catch (e) {
       console.error("Email failed", e);
     }
-  }
-
-  if (error) {
-
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
   }
 
   return NextResponse.json({ success: true, applicant: data });
@@ -99,6 +95,8 @@ export async function DELETE(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   const { id } = await context.params;
 
   const { data: applicant, error: fetchError } = await supabaseAdmin

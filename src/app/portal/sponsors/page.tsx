@@ -14,9 +14,33 @@ type Sponsor = {
   website_listing: string | null;
 };
 
+type SponsorForm = {
+  company: string;
+  contact_name: string;
+  email: string;
+  phone: string;
+  package: string;
+  revenue: string;
+  status: string;
+  website_listing: string;
+  notes: string;
+};
+
+const sponsorFields: (keyof SponsorForm)[] = [
+  "company",
+  "contact_name",
+  "email",
+  "phone",
+  "package",
+  "revenue",
+  "status",
+  "website_listing",
+  "notes",
+];
+
 export default function SponsorsPage() {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<SponsorForm>({
     company: "",
     contact_name: "",
     email: "",
@@ -35,7 +59,9 @@ export default function SponsorsPage() {
   }
 
   useEffect(() => {
-    loadSponsors();
+    window.setTimeout(() => {
+      void loadSponsors();
+    }, 0);
   }, []);
 
   async function addSponsor() {
@@ -77,10 +103,10 @@ export default function SponsorsPage() {
         </h2>
 
         <div className="grid gap-4 md:grid-cols-2">
-          {Object.keys(form).map((key) => (
+          {sponsorFields.map((key) => (
             <input
               key={key}
-              value={(form as any)[key]}
+              value={form[key]}
               onChange={(e) =>
                 setForm({
                   ...form,

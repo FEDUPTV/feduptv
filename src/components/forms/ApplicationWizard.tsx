@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "fedup_application";
 const TOTAL_STEPS = 6;
@@ -79,21 +79,21 @@ const initialFormData: FormData = {
 
 export default function ApplicationWizard() {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [formData, setFormData] = useState<FormData>(() => {
+    if (typeof window === "undefined") return initialFormData;
+
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (!saved) return initialFormData;
+
+    try {
+      return { ...initialFormData, ...JSON.parse(saved) };
+    } catch {
+      window.localStorage.removeItem(STORAGE_KEY);
+      return initialFormData;
+    }
+  });
   const [files, setFiles] = useState<FileList | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-
-    if (saved) {
-      try {
-        setFormData(JSON.parse(saved));
-      } catch {
-        localStorage.removeItem(STORAGE_KEY);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
@@ -125,7 +125,7 @@ export default function ApplicationWizard() {
 
   const goNext = () => {
 
-    const requiredFields: Record<number, string[]> = {
+    const requiredFields: Record<number, (keyof FormData)[]> = {
       1: [
         "first_name",
         "last_name",
@@ -177,8 +177,8 @@ export default function ApplicationWizard() {
 
     const missing = requiredFields[step]?.filter(
       (field) =>
-        !(formData as any)[field] ||
-        String((formData as any)[field]).trim() === ""
+        !formData[field] ||
+        String(formData[field]).trim() === ""
     );
 
     if (
@@ -365,8 +365,6 @@ const response = await fetch("/api/apply", {
       setSubmitting(false);
     }
   };
-
-  const progress = ((step - 1) / (TOTAL_STEPS - 1)) * 100;
 
   const inputClass =
     "w-full rounded-lg border border-zinc-700 bg-black p-4 text-white placeholder:text-zinc-500 transition-all duration-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 focus:outline-none";

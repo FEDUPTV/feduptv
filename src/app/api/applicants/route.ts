@@ -1,21 +1,16 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../lib/supabase-admin";
-
-console.log(
-  "SERVICE KEY EXISTS:",
-  !!process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+import { isPortalAuthenticated, unauthorized } from "../../../lib/portalAuth";
 
 export async function GET() {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   const { data, error } = await supabaseAdmin
     .from("applicants")
     .select("*")
     .order("created_at", {
       ascending: false,
     });
-
-  console.log("APPLICANTS DATA:", data);
-  console.log("APPLICANTS ERROR:", error);
 
   if (error) {
     return NextResponse.json({

@@ -40,7 +40,7 @@ export default function ContactPage() {
           CONTACT FEDUP
         </p>
 
-        <h1 className="text-5xl font-black md:text-6xl">Let's Connect</h1>
+        <h1 className="text-5xl font-black md:text-6xl">Let&apos;s Connect</h1>
 
         <p className="mx-auto mt-5 max-w-3xl text-lg text-gray-400">
           Auditions, sponsorships, partnerships, media, and FEDUP inquiries.

@@ -26,6 +26,32 @@ function isBadEmail(email: string) {
   );
 }
 
+async function findBannedApplicant(email: string, phone: string) {
+  const emailQuery = supabaseAdmin
+    .from("banned_applicants")
+    .select("id,email,phone")
+    .eq("email", email)
+    .maybeSingle();
+
+  const phoneQuery = phone
+    ? supabaseAdmin
+        .from("banned_applicants")
+        .select("id,email,phone")
+        .eq("phone", phone)
+        .maybeSingle()
+    : Promise.resolve({ data: null, error: null });
+
+  const [emailResult, phoneResult] = await Promise.all([
+    emailQuery,
+    phoneQuery,
+  ]);
+
+  if (emailResult.error) throw emailResult.error;
+  if (phoneResult.error) throw phoneResult.error;
+
+  return emailResult.data || phoneResult.data;
+}
+
 export async function POST(request: Request) {
   try {
     const ipAddress =
@@ -111,12 +137,7 @@ export async function POST(request: Request) {
     const cleanPhone =
       String(body.phone || "").replace(/\D/g, "");
 
-    const { data: bannedApplicant } =
-      await supabaseAdmin
-        .from("banned_applicants")
-        .select("id,email,phone")
-        .or(`email.eq.${cleanEmail},phone.eq.${cleanPhone}`)
-        .maybeSingle();
+    const bannedApplicant = await findBannedApplicant(cleanEmail, cleanPhone);
 
     if (bannedApplicant) {
       return NextResponse.json(

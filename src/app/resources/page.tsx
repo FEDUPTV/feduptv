@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Resource = {
   id: string;
@@ -14,6 +14,10 @@ type Resource = {
   address?: string;
   eligibility?: string;
   last_verified?: string;
+};
+
+type City = {
+  city: string;
 };
 
 const HELP_CATEGORIES = [
@@ -41,7 +45,7 @@ export default function ResourcesPage() {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [category, setCategory] = useState("");
-  const [cities, setCities] = useState<any[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
@@ -55,7 +59,7 @@ async function loadCities(selectedState: string) {
   setCities(data.cities || []);
 }
 
-async function loadResources(nextCategory = category) {
+const loadResources = useCallback(async (nextCategory = category) => {
 
     if (!state) return;
 
@@ -72,7 +76,7 @@ async function loadResources(nextCategory = category) {
 
     setResources(data.resources || []);
     setLoading(false);
-  }
+  }, [category, city, state]);
 
   async function useMyLocation() {
     if (!navigator.geolocation) {
@@ -96,9 +100,11 @@ async function loadResources(nextCategory = category) {
 
 
     if (state) {
-      loadResources("");
+      window.setTimeout(() => {
+        void loadResources("");
+      }, 0);
     }
-  }, [state]);
+  }, [loadResources, state]);
 
   return (
     <main className="bg-black px-6 py-6 text-white">
@@ -176,7 +182,7 @@ async function loadResources(nextCategory = category) {
               disabled={!state}
             >
               <option value="">Select City</option>
-              {cities.map((item: any) => (
+              {cities.map((item) => (
                 <option
                   key={item.city}
                   value={item.city}

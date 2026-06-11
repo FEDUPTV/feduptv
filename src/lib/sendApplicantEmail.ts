@@ -1,17 +1,26 @@
 import { resend } from "./resend";
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function sendApplicantEmail(
   email: string,
   firstName: string
 ) {
   try {
-    const result = await resend.emails.send({
+    await resend.emails.send({
       from: "FEDUP <noreply@feduptv.com>",
       to: email,
       subject: "FEDUP Application Received",
       html: `
         <div style="font-family:Arial,sans-serif">
-          <h2>Thank You ${firstName}</h2>
+          <h2>Thank You ${escapeHtml(firstName)}</h2>
 
           <p>
             Your FEDUP casting application has been received.
@@ -31,8 +40,6 @@ export async function sendApplicantEmail(
         </div>
       `,
     });
-
-    console.log('EMAIL RESULT:', JSON.stringify(result, null, 2));
   } catch (error) {
     console.error("Email Error:", error);
   }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../lib/supabase-admin";
+import { isPortalAuthenticated, unauthorized } from "../../../lib/portalAuth";
 
 function toNumber(value: unknown) {
   if (value === "" || value === undefined || value === null) return 0;
@@ -8,6 +9,8 @@ function toNumber(value: unknown) {
 }
 
 export async function GET() {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   const { data, error } = await supabaseAdmin
     .from("sponsors")
     .select("*")
@@ -21,6 +24,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   const body = await request.json();
   const amount = toNumber(body.amount || body.revenue);
   const participation = amount * 0.2;

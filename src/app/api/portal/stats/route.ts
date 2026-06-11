@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../../lib/supabase-admin";
+import { isPortalAuthenticated, unauthorized } from "../../../../lib/portalAuth";
 
 export async function GET() {
+  if (!(await isPortalAuthenticated())) return unauthorized();
+
   const { data, error } = await supabaseAdmin
     .from("applicants")
     .select("status, producer_one_rating, producer_two_rating, producer_three_rating");

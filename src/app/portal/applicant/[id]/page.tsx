@@ -15,11 +15,59 @@ const statuses = [
   "Rejected",
 ];
 
+type Applicant = {
+  id?: string;
+  created_at?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  banned?: boolean;
+  status?: string;
+  producer_notes?: string;
+  audition_date?: string;
+  audition_time?: string;
+  audition_location?: string;
+  audition_notes?: string;
+  audition_outcome?: string;
+  brandi_vote?: string;
+  rashia_vote?: string;
+  vlad_vote?: string;
+  casting_score?: number | string;
+  producer_one_rating?: number;
+  producer_two_rating?: number;
+  producer_three_rating?: number;
+  photo_urls?: string[];
+  video_urls?: string[];
+  instagram?: string;
+  tiktok?: string;
+  facebook?: string;
+  prison_name?: string;
+  age?: number | string;
+  birthdate?: string;
+  address?: string;
+  occupation?: string;
+  children?: string;
+  children_count?: number | string;
+  over_18?: string | boolean;
+  can_travel_orlando?: string | boolean;
+  charges?: string;
+  time_served?: string;
+  jurisdiction?: string;
+  prison_story_rating?: number | string;
+  fed_up_story?: string;
+  underestimated_story?: string;
+  shocking_truth?: string;
+  confrontation_story?: string;
+  selection_reason?: string;
+  scroll_stopper_story?: string;
+};
+
 export default function CandidateDetailPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [applicant, setCandidate] = useState<any>(null);
+  const [applicant, setCandidate] = useState<Applicant | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -61,31 +109,33 @@ export default function CandidateDetailPage() {
         const data = await response.json();
 
         if (data.applicant) {
-          setCandidate(data.applicant);
-          setStatus(data.applicant.status || "New");
-          setProducerNotes(data.applicant.producer_notes || "");
+          const nextApplicant = data.applicant as Applicant;
 
-          setAuditionDate(data.applicant.audition_date || "");
-          setAuditionTime(data.applicant.audition_time || "");
-          setAuditionLocation(data.applicant.audition_location || "");
-          setAuditionNotes(data.applicant.audition_notes || "");
-          setAuditionOutcome(data.applicant.audition_outcome || "Pending");
+          setCandidate(nextApplicant);
+          setStatus(nextApplicant.status || "New");
+          setProducerNotes(nextApplicant.producer_notes || "");
 
-          setBrandiVote(data.applicant.brandi_vote || "Maybe");
-          setRashiaVote(data.applicant.rashia_vote || "Maybe");
-          setVladVote(data.applicant.vlad_vote || "Maybe");
-          setCastingScore(data.applicant.casting_score ? String(data.applicant.casting_score) : "");
+          setAuditionDate(nextApplicant.audition_date || "");
+          setAuditionTime(nextApplicant.audition_time || "");
+          setAuditionLocation(nextApplicant.audition_location || "");
+          setAuditionNotes(nextApplicant.audition_notes || "");
+          setAuditionOutcome(nextApplicant.audition_outcome || "Pending");
+
+          setBrandiVote(nextApplicant.brandi_vote || "Maybe");
+          setRashiaVote(nextApplicant.rashia_vote || "Maybe");
+          setVladVote(nextApplicant.vlad_vote || "Maybe");
+          setCastingScore(nextApplicant.casting_score ? String(nextApplicant.casting_score) : "");
 
           setProducerOneRating(
-            String(data.applicant.producer_one_rating || 0)
+            String(nextApplicant.producer_one_rating || 0)
           );
 
           setProducerTwoRating(
-            String(data.applicant.producer_two_rating || 0)
+            String(nextApplicant.producer_two_rating || 0)
           );
 
           setProducerThreeRating(
-            String(data.applicant.producer_three_rating || 0)
+            String(nextApplicant.producer_three_rating || 0)
           );
         }
       } catch (error) {
@@ -462,7 +512,9 @@ export default function CandidateDetailPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-400">Submitted</span>
                   <span>
-                    {new Date(applicant.created_at).toLocaleDateString()}
+                    {applicant.created_at
+                      ? new Date(applicant.created_at).toLocaleDateString()
+                      : "-"}
                   </span>
                 </div>
 
@@ -686,7 +738,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
   );
 }
 
-function Row({ label, value }: { label: string; value: any }) {
+function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="grid gap-2 border-b border-zinc-800 pb-3 md:grid-cols-3">
       <p className="font-bold text-gray-400">{label}</p>
@@ -695,7 +747,7 @@ function Row({ label, value }: { label: string; value: any }) {
   );
 }
 
-function Long({ label, value }: { label: string; value: any }) {
+function Long({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="border-b border-zinc-800 pb-4">
       <p className="mb-2 font-bold text-gray-400">{label}</p>
