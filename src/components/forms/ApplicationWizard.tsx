@@ -535,7 +535,7 @@ const response = await fetch("/api/apply", {
 
                 <input
                   name="bday"
-                  type="date"
+                  type="text" placeholder="MM/DD/YYYY"
                   value={formData.birthdate}
                   onChange={(e) => updateField("birthdate", e.target.value)}
                   className={inputClass}
@@ -1116,7 +1116,7 @@ const response = await fetch("/api/apply", {
                 name="applicant-media"
                 type="file"
                 multiple
-                accept="image/*,video/*"
+                accept=".jpg,.jpeg,.png,.mp4,.mov"
                 onChange={(e) => setFiles(e.target.files)}
                 className="w-full rounded bg-zinc-900 p-4 text-white"
               />
