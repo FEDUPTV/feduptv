@@ -3,64 +3,55 @@
 import { useState } from "react";
 
 const videos = [
-  {
-    title: "Official Casting Call",
-    src: "/images/mainvideo.mov",
-  },
-  {
-    title: "FEDUP Mentioned",
-    src: "/images/mainvideo2.mov",
-  },
+  { title: "Official Casting Call", src: "/images/mainvideo.mov" },
+  { title: "FEDUP Mentioned", src: "/images/mainvideo2.mov" },
 ];
 
 export default function FeaturedVideo() {
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const nextVideo = () => {
-    setActiveIndex((prev) => (prev + 1) % videos.length);
-  };
-
   const activeVideo = videos[activeIndex];
 
   return (
-    <section className="bg-black py-10 border-t border-yellow-500/20">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="bg-[#f6f0e6] py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-5 md:px-6">
+        <div className="mb-9 grid gap-5 md:grid-cols-[0.8fr_1.2fr] md:items-end">
+          <div>
+            <p className="fedup-eyebrow mb-4">Watch The Movement</p>
+            <h2 className="fedup-title text-4xl md:text-6xl">{activeVideo.title}</h2>
+          </div>
+          <p className="fedup-body max-w-2xl md:justify-self-end">
+            Preview the voice, tension, and purpose behind FEDUP through casting footage and media moments.
+          </p>
+        </div>
 
-        <p className="mb-4 text-center text-sm font-bold tracking-[0.4em] text-yellow-500">
-          WATCH THE MOVEMENT
-        </p>
+        <div className="premium-card p-2">
+          <video
+            key={activeVideo.src}
+            src={activeVideo.src}
+            controls
+            muted
+            playsInline
+            preload="metadata"
+            onEnded={() => setActiveIndex((prev) => (prev + 1) % videos.length)}
+            className="aspect-video w-full bg-[#120f0b] object-cover"
+          />
+        </div>
 
-        <h2 className="mb-6 text-center text-4xl md:text-5xl font-black text-white">
-          {activeVideo.title}
-        </h2>
-
-        <video
-          key={activeVideo.src}
-          src={activeVideo.src}
-          controls
-          muted
-          playsInline
-          preload="metadata"
-          onEnded={nextVideo}
-          className="w-full rounded-xl md:rounded-2xl border border-yellow-500/20"
-        />
-
-        <div className="mt-6 flex flex-wrap justify-center gap-4">
+        <div className="mt-6 flex flex-wrap gap-3">
           {videos.map((video, index) => (
             <button
               key={video.src}
               onClick={() => setActiveIndex(index)}
               className={
                 activeIndex === index
-                  ? "rounded-xl px-6 py-3 font-bold bg-yellow-500 text-black"
-                  : "rounded-xl px-6 py-3 font-bold border border-yellow-500/20 bg-zinc-900 text-white"
+                  ? "premium-button rounded-sm px-5 py-3 text-xs"
+                  : "premium-button-secondary rounded-sm px-5 py-3 text-xs"
               }
             >
               {video.title}
             </button>
           ))}
         </div>
-
       </div>
     </section>
   );

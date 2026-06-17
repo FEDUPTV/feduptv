@@ -398,15 +398,15 @@ const response = await fetch("/api/apply", {
   };
 
   const inputClass =
-    "w-full rounded-lg border border-zinc-700 bg-black p-4 text-white placeholder:text-zinc-500 transition-all duration-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 focus:outline-none";
+    "w-full border border-[#B9932F]/20 bg-white p-4 text-[#17130e] placeholder:text-[#8f806f] transition-all duration-200 focus:border-[#B9932F] focus:ring-2 focus:ring-[#B9932F]/15 focus:outline-none";
 
   const textareaClass =
-    "w-full min-h-[140px] rounded-lg border border-zinc-700 bg-black p-4 text-white placeholder:text-zinc-500 transition-all duration-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 focus:outline-none";
+    "w-full min-h-[140px] border border-[#B9932F]/20 bg-white p-4 text-[#17130e] placeholder:text-[#8f806f] transition-all duration-200 focus:border-[#B9932F] focus:ring-2 focus:ring-[#B9932F]/15 focus:outline-none";
 
-  const labelClass = "mb-2 block text-sm font-bold text-white";
+  const labelClass = "mb-2 block text-sm font-bold text-[#17130e]";
 
   return (
-    <div className="mx-auto max-w-5xl px-6 pt-10 pb-8">
+    <div className="mx-auto max-w-5xl px-5 pt-10 pb-8 md:px-6 md:pt-14">
       {formError && (
         <div
           role="alert"
@@ -420,35 +420,35 @@ const response = await fetch("/api/apply", {
 
         
         </div>
-        <p className="mb-3 text-sm font-black uppercase tracking-[0.35em] text-yellow-500">
+        <p className="fedup-eyebrow mb-4">
           Cast Member Inquiry
         </p>
 
-        <h1 className="mb-6 text-4xl font-black text-yellow-500 md:text-6xl">
+        <h1 className="fedup-title mb-7 text-4xl md:text-6xl">
           FEDUP Casting Application
         </h1>
 
-        <div className="mb-6 rounded-2xl border border-yellow-500/20 bg-zinc-900 p-6">
-          <p className="mb-4 text-lg leading-relaxed text-gray-300">
+        <div className="premium-card mb-6 p-6">
+          <p className="mb-4 text-lg leading-relaxed text-[#5c5144]">
             Thank you for your interest in the FEDUP Reality TV Series. We are
             happy to have the opportunity to hear your story.
           </p>
 
-          <p className="mb-4 text-lg leading-relaxed text-gray-300">
+          <p className="mb-4 text-lg leading-relaxed text-[#5c5144]">
             FEDUP stands for Females Ending Defeat. Unleashing Purpose. This
             reality television series showcases the story, redemption,
             resilience, and transformation of women who have served time in
             prison and are rebuilding their lives.
           </p>
 
-          <p className="text-lg leading-relaxed text-gray-300">
+          <p className="text-lg leading-relaxed text-[#5c5144]">
             Please complete the application below if you would like to audition
             for a chance to be selected as a cast member for the FEDUP Reality
             TV Series.
           </p>
         </div>
 
-<div className="mb-8 rounded-xl border border-yellow-500/20 bg-zinc-900 p-5">
+<div className="premium-card mb-8 p-5">
           <div className="grid gap-3 md:grid-cols-6 text-center text-sm font-bold">
 
             <div className={step >= 1 ? "text-green-400" : "text-gray-500"}>
@@ -471,7 +471,7 @@ const response = await fetch("/api/apply", {
               {step > 5 ? "✓" : "•"} Casting
             </div>
 
-            <div className={step >= 6 ? "text-yellow-400" : "text-gray-500"}>
+            <div className={step >= 6 ? "text-[#E5C76B]" : "text-gray-500"}>
               ★ Final Review
             </div>
 
@@ -479,10 +479,10 @@ const response = await fetch("/api/apply", {
 
       </div>
 
-      <div className="mt-4 rounded-2xl border border-yellow-500/20 bg-zinc-900 p-8">
+      <div className="premium-card mt-4 p-6 md:p-8">
         {step === 1 && (
           <div>
-            <h2 className="mb-3 text-3xl font-black text-white">
+            <h2 className="mb-3 text-3xl font-black text-[#17130e]">
               Personal Information
             </h2>
 
@@ -631,7 +631,7 @@ const response = await fetch("/api/apply", {
 
         {step === 2 && (
           <div>
-            <h2 className="mb-3 text-3xl font-black text-white">
+            <h2 className="mb-3 text-3xl font-black text-[#17130e]">
               Prison Background
             </h2>
 
@@ -786,7 +786,7 @@ const response = await fetch("/api/apply", {
 
         {step === 3 && (
           <div>
-            <h2 className="mb-3 text-3xl font-black text-white">
+            <h2 className="mb-3 text-3xl font-black text-[#17130e]">
               Social Media
             </h2>
 
@@ -840,7 +840,7 @@ const response = await fetch("/api/apply", {
 
         {step === 4 && (
           <div>
-            <h2 className="mb-3 text-3xl font-black text-white">
+            <h2 className="mb-3 text-3xl font-black text-[#17130e]">
               Your Story
             </h2>
 
@@ -869,7 +869,7 @@ const response = await fetch("/api/apply", {
                     formData.fed_up_story.length >= 250
                       ? "text-green-400"
                       : formData.fed_up_story.length >= 100
-                      ? "text-yellow-400"
+                      ? "text-[#E5C76B]"
                       : "text-red-400"
                   }`}
                 >
@@ -903,7 +903,7 @@ const response = await fetch("/api/apply", {
                     formData.underestimated_story.length >= 250
                       ? "text-green-400"
                       : formData.underestimated_story.length >= 100
-                      ? "text-yellow-400"
+                      ? "text-[#E5C76B]"
                       : "text-red-400"
                   }`}
                 >
@@ -937,7 +937,7 @@ const response = await fetch("/api/apply", {
                     formData.shocking_truth.length >= 250
                       ? "text-green-400"
                       : formData.shocking_truth.length >= 100
-                      ? "text-yellow-400"
+                      ? "text-[#E5C76B]"
                       : "text-red-400"
                   }`}
                 >
@@ -955,7 +955,7 @@ const response = await fetch("/api/apply", {
 
         {step === 5 && (
           <div>
-            <h2 className="mb-3 text-3xl font-black text-white">
+            <h2 className="mb-3 text-3xl font-black text-[#17130e]">
               Casting Questions
             </h2>
 
@@ -986,7 +986,7 @@ const response = await fetch("/api/apply", {
                     formData.confrontation_story.length >= 250
                       ? "text-green-400"
                       : formData.confrontation_story.length >= 100
-                      ? "text-yellow-400"
+                      ? "text-[#E5C76B]"
                       : "text-red-400"
                   }`}
                 >
@@ -1019,7 +1019,7 @@ const response = await fetch("/api/apply", {
                     formData.selection_reason.length >= 250
                       ? "text-green-400"
                       : formData.selection_reason.length >= 100
-                      ? "text-yellow-400"
+                      ? "text-[#E5C76B]"
                       : "text-red-400"
                   }`}
                 >
@@ -1053,7 +1053,7 @@ const response = await fetch("/api/apply", {
                     formData.scroll_stopper_story.length >= 250
                       ? "text-green-400"
                       : formData.scroll_stopper_story.length >= 100
-                      ? "text-yellow-400"
+                      ? "text-[#E5C76B]"
                       : "text-red-400"
                   }`}
                 >
@@ -1071,7 +1071,7 @@ const response = await fetch("/api/apply", {
                   How interesting is your prison story?
                 </label>
 
-                <div className="mb-3 text-lg font-black text-yellow-500">
+                <div className="mb-3 text-lg font-black text-[#E5C76B]">
                   Rating: {formData.prison_story_rating} / 5
                 </div>
 
@@ -1098,7 +1098,7 @@ const response = await fetch("/api/apply", {
 
         {step === 6 && (
           <div>
-            <h2 className="mb-3 text-3xl font-black text-white">
+            <h2 className="mb-3 text-3xl font-black text-[#17130e]">
               Uploads and Final Questions
             </h2>
 
@@ -1106,8 +1106,8 @@ const response = await fetch("/api/apply", {
               Upload photos and answer the final questions before submitting.
             </p>
 
-            <div className="mb-6 rounded-xl border border-yellow-500/20 bg-black p-5">
-              <label className="mb-3 block font-bold text-white">
+            <div className="mb-6 border border-[#B9932F]/20 bg-[#fff9ed] p-5">
+              <label className="mb-3 block font-bold text-[#17130e]">
                 Upload photos or videos of yourself, your family, significant others,
                 prison friends, or your story.
               </label>
@@ -1118,7 +1118,7 @@ const response = await fetch("/api/apply", {
                 multiple
                 accept=".jpg,.jpeg,.png,.mp4,.mov"
                 onChange={(e) => setFiles(e.target.files)}
-                className="w-full rounded bg-zinc-900 p-4 text-white"
+                className="w-full rounded bg-white p-4 text-[#17130e]"
               />
 
               <p className="mt-3 text-sm text-gray-500">
@@ -1127,7 +1127,7 @@ const response = await fetch("/api/apply", {
               </p>
 
               {files && (
-                <p className="mt-3 text-sm text-yellow-500">
+                <p className="mt-3 text-sm text-[#E5C76B]">
                   Selected files: {files.length}
                 </p>
               )}
@@ -1184,12 +1184,12 @@ const response = await fetch("/api/apply", {
                 />
               </div>
 
-              <div className="rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-6">
-                <h3 className="mb-2 font-black text-yellow-500">
+              <div className="border border-[#C9A227]/20 bg-[#C9A227]/10 p-6">
+                <h3 className="mb-2 font-black text-[#E5C76B]">
                   Next Phase of Casting
                 </h3>
 
-                <p className="text-gray-300">
+                <p className="text-[#5c5144]">
                   Advancing in the FEDUP casting process may include an invitation
                   to a private in-person audition with our production team in
                   Orlando, Florida.
@@ -1200,13 +1200,13 @@ const response = await fetch("/api/apply", {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-yellow-500/20 bg-black p-6 space-y-5">
+              <div className="border border-[#B9932F]/20 bg-[#fff9ed] p-6 space-y-5">
 
-                <h3 className="text-xl font-black text-yellow-500">
+                <h3 className="text-xl font-black text-[#E5C76B]">
                   Applicant Agreements & Consent
                 </h3>
 
-                <label className="flex gap-3 text-gray-300">
+                <label className="flex gap-3 text-[#5c5144]">
                   <input
                     name="agree-privacy"
                     type="checkbox"
@@ -1224,7 +1224,7 @@ const response = await fetch("/api/apply", {
                   </span>
                 </label>
 
-                <label className="flex gap-3 text-gray-300">
+                <label className="flex gap-3 text-[#5c5144]">
                   <input
                     name="agree-release"
                     type="checkbox"
@@ -1242,7 +1242,7 @@ const response = await fetch("/api/apply", {
                   </span>
                 </label>
 
-                <label className="flex gap-3 text-gray-300">
+                <label className="flex gap-3 text-[#5c5144]">
                   <input
                     name="agree-terms"
                     type="checkbox"
@@ -1261,7 +1261,7 @@ const response = await fetch("/api/apply", {
                   </span>
                 </label>
 
-                <label className="flex gap-3 text-gray-300">
+                <label className="flex gap-3 text-[#5c5144]">
                   <input
                     name="agree-truthful"
                     type="checkbox"
@@ -1281,12 +1281,12 @@ const response = await fetch("/api/apply", {
 
               </div>
 
-              <div className="rounded-xl border border-yellow-500/20 bg-black p-6">
-                <h3 className="mb-2 font-black text-yellow-500">
+              <div className="border border-[#B9932F]/20 bg-[#fff9ed] p-6">
+                <h3 className="mb-2 font-black text-[#E5C76B]">
                   Before You Submit
                 </h3>
 
-                <p className="text-gray-300">
+                <p className="text-[#5c5144]">
                   Please review your answers carefully.
                   Once submitted, your application may
                   immediately enter the producer review
@@ -1299,7 +1299,7 @@ const response = await fetch("/api/apply", {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="w-full rounded-xl bg-yellow-500 py-5 text-lg font-black text-black transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled={submitting}
+                className="premium-button w-full rounded-sm py-5 text-lg disabled:cursor-not-allowed disabled:opacity-50" disabled={submitting}
 >
   {submitting
     ? "SUBMITTING..."
@@ -1314,7 +1314,7 @@ const response = await fetch("/api/apply", {
         {step > 1 && (
           <button
             onClick={goBack}
-            className="rounded bg-zinc-800 px-6 py-3 font-bold text-white"
+            className="rounded-sm bg-[#efe3cf] px-6 py-3 font-bold text-[#17130e]"
           >
             Back
           </button>
@@ -1323,7 +1323,7 @@ const response = await fetch("/api/apply", {
         {step < TOTAL_STEPS && (
           <button
             onClick={goNext}
-            className="rounded bg-yellow-500 px-6 py-3 font-black text-black transition active:scale-95"
+            className="premium-button rounded-sm px-6 py-3 text-sm transition active:scale-95"
           >
             Next
           </button>

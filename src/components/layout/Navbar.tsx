@@ -5,113 +5,85 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaFacebookF, FaInstagram, FaYoutube, FaTimes } from "react-icons/fa";
 
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/audition", label: "Audition" },
+  { href: "/resources", label: "Resources" },
+  { href: "/sponsors", label: "Sponsors" },
+  { href: "/merch", label: "Merch" },
+  { href: "/contact", label: "Contact" },
+];
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-yellow-500/20 bg-black/95 backdrop-blur-md">
-      <nav className="mx-auto flex items-center justify-between px-4 py-3 md:max-w-7xl md:px-6">
-        <Link href="/">
+    <header className="sticky top-0 z-50 border-b border-[#f7efe2]/10 bg-[#17130e]/92 shadow-[0_16px_45px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
+        <Link href="/" aria-label="FEDUP home" className="flex items-center gap-3">
           <Image
             src="/images/fedup_logo.png"
             alt="FEDUP"
-            width={60}
-            height={60}
+            width={58}
+            height={58}
             priority
-            style={{ width: "60px", height: "60px" }}
+            className="h-14 w-14"
           />
+          <span className="hidden text-xs font-black uppercase tracking-[0.32em] text-[#E5C76B] sm:block">
+            FEDUP
+          </span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-8 font-semibold uppercase text-white">
-          <Link href="/">Home</Link>
-
-          <Link href="/audition">Audition</Link>
-
-          <Link href="/resources">Resources</Link>
-          <Link href="/sponsors">Sponsors</Link>
-          <Link href="/contact">Contact</Link>
+        <div className="hidden items-center gap-7 text-[0.78rem] font-bold uppercase tracking-[0.18em] text-zinc-300 md:flex">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="transition hover:text-[#DCC06A]">
+              {link.label}
+            </Link>
+          ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
-          <a
-            href="https://www.facebook.com/FedUpRealitySeries"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaFacebookF className="text-[#1877F2] text-xl hover:scale-110 transition-all" />
+        <div className="hidden items-center gap-4 md:flex">
+          <a href="https://www.facebook.com/FedUpRealitySeries" target="_blank" rel="noopener noreferrer" aria-label="FEDUP Facebook">
+            <FaFacebookF className="text-lg text-[#b8aa98] transition hover:text-[#DCC06A]" />
           </a>
-
-          <a
-            href="https://www.instagram.com/fedddup_"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaInstagram className="text-[#E4405F] text-xl hover:scale-110 transition-all" />
+          <a href="https://www.instagram.com/fedddup_" target="_blank" rel="noopener noreferrer" aria-label="FEDUP Instagram">
+            <FaInstagram className="text-xl text-[#b8aa98] transition hover:text-[#DCC06A]" />
           </a>
-
-          <a
-            href="https://www.youtube.com/@FedUpRealitySeries"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FaYoutube className="text-[#FF0000] text-xl hover:scale-110 transition-all" />
+          <a href="https://www.youtube.com/@FedUpRealitySeries" target="_blank" rel="noopener noreferrer" aria-label="FEDUP YouTube">
+            <FaYoutube className="text-xl text-[#b8aa98] transition hover:text-[#DCC06A]" />
           </a>
-
-          <Link
-            href="/apply"
-            className="rounded-full bg-yellow-500 px-6 py-3 font-black text-black"
-          >
+          <Link href="/apply" className="premium-button rounded-sm px-5 py-3 text-xs">
             Apply Now
           </Link>
         </div>
 
         <button
           onClick={() => setOpen(!open)}
-          className="text-white md:hidden"
+          className="rounded-sm border border-[#f7efe2]/10 px-4 py-3 text-sm font-black uppercase tracking-[0.22em] text-[#f7efe2] md:hidden"
+          aria-expanded={open}
+          aria-label="Toggle navigation"
         >
-          {open ? (
-            <FaTimes size={30} />
-          ) : (
-            <span className="font-black uppercase tracking-wider">Menu</span>
-          )}
+          {open ? <FaTimes size={18} /> : "Menu"}
         </button>
       </nav>
 
       {open && (
-        <div className="md:hidden border-t border-yellow-500/20 bg-black">
-          <div className="flex flex-col items-center gap-6 py-10 text-xl font-bold text-white">
-            <Link href="/" onClick={() => setOpen(false)}>
-              HOME
-            </Link>
-
-            <Link href="/apply" onClick={() => setOpen(false)}>
-              APPLY NOW
-            </Link>
-
-            <Link href="/audition" onClick={() => setOpen(false)}>
-              AUDITION DETAILS
-            </Link>
-
-            <Link href="/resources" onClick={() => setOpen(false)}>
-              RESOURCES
-            </Link>
-
-            <Link href="/sponsors" onClick={() => setOpen(false)}>
-              SPONSORS
-            </Link>
-
-            <Link href="/contact" onClick={() => setOpen(false)}>
-              CONTACT
-            </Link>
-
-            <Link href="/portal" onClick={() => setOpen(false)}>
-              PORTAL
-            </Link>
-
-            <div className="mt-4 flex gap-6">
-              <FaFacebookF className="text-[#1877F2]" size={24} />
-              <FaInstagram className="text-[#E4405F]" size={24} />
-              <FaYoutube className="text-[#FF0000]" size={24} />
+        <div className="border-t border-[#f7efe2]/10 bg-[#17130e] md:hidden">
+          <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
+            {[...navLinks, { href: "/apply", label: "Apply Now" }, { href: "/portal", label: "Portal" }].map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="border-b border-[#f7efe2]/10 py-4 text-lg font-black uppercase tracking-[0.14em] text-[#f7efe2]"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="flex gap-5 py-5 text-zinc-400">
+              <FaFacebookF size={20} />
+              <FaInstagram size={22} />
+              <FaYoutube size={24} />
             </div>
           </div>
         </div>

@@ -2,40 +2,22 @@ import Link from "next/link";
 
 export default function FinalCTA() {
   return (
-    <section className="relative overflow-hidden bg-black py-16 text-white">
-
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.18),transparent_60%)]" />
-
-      <div className="relative mx-auto max-w-5xl px-6 text-center">
-
-        <p className="mb-4 text-sm font-black uppercase tracking-[0.4em] text-yellow-500">
-          READY TO SHARE YOUR STORY?
-        </p>
-
-        <h2 className="mb-8 text-4xl font-black md:text-7xl">
-          Your Past Does Not Define You
-        </h2>
-
-        <p className="mx-auto mb-10 max-w-3xl text-lg md:text-xl text-gray-300">
+    <section className="relative overflow-hidden bg-[#f6f0e6] py-16 text-[#17130e] md:py-24">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#C9A227]/60 to-transparent" />
+      <div className="mx-auto max-w-5xl px-5 text-center md:px-6">
+        <p className="fedup-eyebrow mb-5">Ready To Share Your Story?</p>
+        <h2 className="fedup-title text-4xl md:text-7xl">Your past does not define you</h2>
+        <p className="fedup-body mx-auto mt-6 max-w-3xl text-lg md:text-xl">
           FEDUP is seeking powerful women ready to inspire others and step into purpose.
         </p>
-
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href="/apply"
-            className="rounded-full bg-yellow-500 px-12 py-5 font-black text-black shadow-[0_0_40px_rgba(234,179,8,0.35)]"
-          >
-            SUBMIT YOUR STORY
+        <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+          <Link href="/apply" className="premium-button rounded-sm px-10 py-5 text-sm">
+            Submit Your Story
           </Link>
-
-          <Link
-            href="/contact"
-            className="rounded-full border border-yellow-500 px-12 py-5 font-black text-yellow-500"
-          >
-            CONTACT US
+          <Link href="/contact" className="premium-button-secondary rounded-sm px-10 py-5 text-sm">
+            Contact Us
           </Link>
         </div>
-
       </div>
     </section>
   );

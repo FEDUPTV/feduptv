@@ -13,7 +13,6 @@ type Resource = {
   website?: string;
   address?: string;
   eligibility?: string;
-  last_verified?: string;
 };
 
 type City = {
@@ -30,18 +29,9 @@ const HELP_CATEGORIES = [
   "Mental Health",
 ];
 
-const CATEGORY_ICONS: Record<string, string> = {
-  Housing: "🏠",
-  Employment: "💼",
-  "Food Assistance": "🍽",
-  Healthcare: "🏥",
-  "Legal Aid": "⚖️",
-  "Recovery Programs": "💊",
-  "Mental Health": "🧠",
-};
-
 export default function ResourcesPage() {
-  const [resources, setResources] = useState<Resource[]>([]);  const [states, setStates] = useState<string[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [states, setStates] = useState<string[]>([]);
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [category, setCategory] = useState("");
@@ -49,18 +39,13 @@ export default function ResourcesPage() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
-  
-async function loadCities(selectedState: string) {
-  const res = await fetch(
-    `/api/cities?state=${encodeURIComponent(selectedState)}`
-  );
+  async function loadCities(selectedState: string) {
+    const res = await fetch(`/api/cities?state=${encodeURIComponent(selectedState)}`);
+    const data = await res.json();
+    setCities(data.cities || []);
+  }
 
-  const data = await res.json();
-  setCities(data.cities || []);
-}
-
-const loadResources = useCallback(async (nextCategory = category) => {
-
+  const loadResources = useCallback(async (nextCategory = category) => {
     if (!state) return;
 
     setLoading(true);
@@ -94,10 +79,8 @@ const loadResources = useCallback(async (nextCategory = category) => {
     );
   }
 
-  
   useEffect(() => {
-    fetch("/api/states").then(r=>r.json()).then(d=>setStates(d.states||[]));
-
+    fetch("/api/states").then((r) => r.json()).then((d) => setStates(d.states || []));
 
     if (state) {
       window.setTimeout(() => {
@@ -107,51 +90,37 @@ const loadResources = useCallback(async (nextCategory = category) => {
   }, [loadResources, state]);
 
   return (
-    <main className="bg-black px-6 py-6 text-white">
-      <div className="mx-auto max-w-6xl text-center">
-        <p className="mb-3 text-sm font-black uppercase tracking-[0.35em] text-yellow-500">
-          FEDUP Resource Center
-        </p>
+    <main className="cinematic-shell min-h-screen px-5 py-12 text-[#17130e] md:py-20">
+      <div className="mx-auto max-w-6xl">
+        <section className="mx-auto mb-10 max-w-4xl text-center">
+          <p className="fedup-eyebrow mb-5">FEDUP Resource Center</p>
+          <h1 className="fedup-title text-5xl md:text-7xl">Find help near you</h1>
+          <p className="fedup-body mx-auto mt-6 max-w-3xl text-lg">
+            Browse trusted support resources by state, city, and need.
+          </p>
+        </section>
 
-        <h1 className="mb-2 text-3xl font-black text-yellow-500 md:text-6xl">
-          Find Help Near You
-        </h1>
-
-        <p className="mx-auto mb-8 max-w-3xl text-lg leading-relaxed text-gray-300">
-          
-        </p>
-
-        <div className="mx-auto mb-6 max-w-3xl rounded-xl border border-yellow-500/20 bg-zinc-900 p-5 text-left">
-          <h3 className="mb-3 text-lg font-black text-yellow-500">
-            How It Works
-          </h3>
-
-          <div className="space-y-2 text-gray-300">
-            <p><strong>1.</strong> Select your state and city.</p>
-            <p><strong>2.</strong> Choose the type of assistance you need.</p>
-            <p><strong>3.</strong> Browse resources and connect directly.</p>
+        <div className="premium-card mx-auto mb-8 max-w-3xl p-6 text-left">
+          <h3 className="mb-4 text-xl font-black text-[#E5C76B]">How It Works</h3>
+          <div className="grid gap-3 text-[#5c5144] md:grid-cols-3">
+            <p><strong className="text-[#17130e]">1.</strong> Select your state and city.</p>
+            <p><strong className="text-[#17130e]">2.</strong> Choose the assistance type.</p>
+            <p><strong className="text-[#17130e]">3.</strong> Connect directly.</p>
           </div>
         </div>
 
-        
-<div className="mb-8 flex justify-center">
-  <div className="rounded-full border border-yellow-500/20 bg-zinc-900 px-6 py-3 text-sm font-bold text-gray-300">
-    {states.length} States • {HELP_CATEGORIES.length} Categories
-  </div>
-</div>
+        <div className="mb-8 text-center">
+          <span className="inline-flex border border-[#B9932F]/20 bg-[#fff9ed] px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-[#5c5144]">
+            {states.length} States / {HELP_CATEGORIES.length} Categories
+          </span>
+        </div>
 
-
-          
-
-<div className="mb-8 rounded-xl border border-yellow-500/20 bg-zinc-900 p-4">
-          <button
-            onClick={useMyLocation}
-            className="mb-4 w-full rounded-xl bg-yellow-500 px-6 py-4 font-black text-black"
-          >
-            📍 Use My Location
+        <div className="premium-card mb-8 p-5 md:p-6">
+          <button onClick={useMyLocation} className="premium-button mb-5 w-full rounded-sm px-6 py-4 text-sm">
+            Use My Location
           </button>
 
-          <div className="mb-6 text-center font-black text-gray-400">OR</div>
+          <div className="mb-5 text-center text-xs font-black uppercase tracking-[0.28em] text-zinc-500">Or</div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <select
@@ -164,7 +133,7 @@ const loadResources = useCallback(async (nextCategory = category) => {
                 setResources([]);
                 setSearched(false);
               }}
-              className="rounded-lg border border-zinc-700 bg-black p-4 text-white"
+              className="border border-[#B9932F]/20 bg-white p-4 text-[#17130e] outline-none focus:border-[#B9932F]"
             >
               <option value="">Select State</option>
               {states.map((item) => (
@@ -178,29 +147,21 @@ const loadResources = useCallback(async (nextCategory = category) => {
                 setCity(e.target.value);
                 setCategory("");
               }}
-              className="rounded-lg border border-zinc-700 bg-black p-4 text-white"
+              className="border border-[#B9932F]/20 bg-white p-4 text-[#17130e] outline-none focus:border-[#B9932F] disabled:opacity-50"
               disabled={!state}
             >
               <option value="">Select City</option>
               {cities.map((item) => (
-                <option
-                  key={item.city}
-                  value={item.city}
-                >
-                  {item.city}
-                </option>
+                <option key={item.city} value={item.city}>{item.city}</option>
               ))}
             </select>
           </div>
         </div>
 
         {state && (
-          <div className="mb-8 rounded-xl border border-yellow-500/20 bg-zinc-900 p-4">
-            <h2 className="mb-4 text-xl font-black text-white">
-              What do you need help with?
-            </h2>
-
-            <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+          <div className="premium-card mb-8 p-5 md:p-6">
+            <h2 className="mb-5 text-2xl font-black text-[#17130e]">What do you need help with?</h2>
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
               {HELP_CATEGORIES.map((item) => (
                 <button
                   key={item}
@@ -210,11 +171,10 @@ const loadResources = useCallback(async (nextCategory = category) => {
                   }}
                   className={
                     category === item
-                      ? "rounded-lg bg-yellow-500 p-5 text-left font-black text-black"
-                      : "rounded-lg border border-yellow-500/20 bg-black p-5 text-left font-black text-white hover:border-yellow-500"
+                      ? "bg-[#C9A227] p-4 text-left text-sm font-black text-black"
+                      : "bg-white p-4 text-left text-sm font-black text-[#17130e] transition hover:bg-[#f1e5d2] hover:text-[#8A6B22]"
                   }
                 >
-                  <span className="mr-2 text-2xl">{CATEGORY_ICONS[item]}</span>
                   {item}
                 </button>
               ))}
@@ -223,62 +183,40 @@ const loadResources = useCallback(async (nextCategory = category) => {
         )}
 
         {loading ? (
-          <p className="text-gray-400">Loading resources...</p>
+          <p className="text-center text-[#5c5144]">Loading resources...</p>
         ) : searched && resources.length === 0 ? (
-          <div className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-8 text-gray-300">
+          <div className="premium-card p-8 text-center text-[#5c5144]">
             No resources found yet for this search.
           </div>
         ) : resources.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             {resources.map((item) => (
-              <div key={item.id} className="rounded-xl border border-yellow-500/20 bg-zinc-900 p-4">
-                <div className="mb-3 inline-block rounded-full bg-yellow-500 px-3 py-1 text-xs font-black uppercase text-black">
+              <div key={item.id} className="premium-card p-6">
+                <div className="mb-4 inline-flex bg-[#C9A227] px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-black">
                   {item.category}
                 </div>
-
-                <h2 className="mb-2 text-xl font-black text-white">
-                  {item.organization_name}
-                </h2>
-
-                <p className="mb-3 text-xs uppercase tracking-wide text-yellow-500">
+                <h2 className="mb-2 text-2xl font-black text-[#17130e]">{item.organization_name}</h2>
+                <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-[#E5C76B]">
                   {item.city ? `${item.city}, ${item.state}` : item.state}
                 </p>
+                {item.description && <p className="mb-5 leading-7 text-[#5c5144]">{item.description}</p>}
 
-                {item.description && <p className="mb-4 leading-relaxed text-gray-300">{item.description}</p>}
+                <div className="space-y-3 text-sm text-[#5c5144]">
+                  {item.phone && <p><strong className="text-[#17130e]">Phone:</strong> {item.phone}</p>}
+                  {item.address && <p><strong className="text-[#17130e]">Address:</strong> {item.address}</p>}
+                  {item.eligibility && <p><strong className="text-[#17130e]">Eligibility:</strong> {item.eligibility}</p>}
+                </div>
 
-                <div className="space-y-3 text-sm text-gray-300">
-                  {item.phone && <p><strong>Phone:</strong> {item.phone}</p>}
-                  {item.address && <p><strong>Address:</strong> {item.address}</p>}
-                  {item.eligibility && <p><strong>Eligibility:</strong> {item.eligibility}</p>}
-                  {item.phone && (
-  <a
-    href={`tel:${item.phone}`}
-    className="rounded-lg bg-yellow-500 px-4 py-3 text-center font-bold text-black"
-  >
-    📞 Call
-  </a>
-)}
-
-{item.website && (
-  <a
-    href={item.website}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="block rounded-lg border border-yellow-500 px-4 py-2 text-center font-bold text-yellow-500"
-  >
-    🌐 Website
-  </a>
-)}
-
-<a
-  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.organization_name)}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="block rounded-lg border border-zinc-700 px-4 py-2 text-center font-bold text-white"
->
-  📍 Directions
-</a>
-
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                  {item.phone && <a href={`tel:${item.phone}`} className="premium-button rounded-sm px-4 py-3 text-xs">Call</a>}
+                  {item.website && (
+                    <a href={item.website} target="_blank" rel="noopener noreferrer" className="premium-button-secondary rounded-sm px-4 py-3 text-xs">
+                      Website
+                    </a>
+                  )}
+                  <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.organization_name)}`} target="_blank" rel="noopener noreferrer" className="rounded-sm border border-[#17130e]/15 px-4 py-3 text-center text-xs font-black uppercase tracking-[0.06em] text-[#5c5144] hover:border-[#B9932F]">
+                    Directions
+                  </a>
                 </div>
               </div>
             ))}

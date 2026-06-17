@@ -18,10 +18,10 @@ export default function RootLayout({
       lang="en"
       className="h-full antialiased"
     >
-      <body className="min-h-screen bg-black text-white flex flex-col">
+      <body className="min-h-screen bg-[#f6f0e6] text-[#17130e] flex flex-col">
   <Navbar />
 
-  <main className="flex-1 bg-black">
+  <main className="flex-1 bg-[#f6f0e6]">
     {children}
   </main>
 

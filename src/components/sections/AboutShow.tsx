@@ -1,53 +1,38 @@
+const cards = [
+  {
+    title: "Real Stories",
+    text: "Women sharing authentic experiences of hardship, resilience, conflict, and growth.",
+  },
+  {
+    title: "Second Chances",
+    text: "A platform for transformation, healing, accountability, and reclaiming purpose.",
+  },
+  {
+    title: "Cultural Impact",
+    text: "Reality storytelling built to move audiences beyond spectacle and into purpose.",
+  },
+];
+
 export default function AboutShow() {
-  const cards = [
-    {
-      title: "Real Stories",
-      text: "Women sharing authentic experiences of hardship, resilience, and growth.",
-    },
-    {
-      title: "Second Chances",
-      text: "A platform for transformation, healing, and reclaiming purpose.",
-    },
-    {
-      title: "Inspiration",
-      text: "Stories that empower others facing similar challenges.",
-    },
-  ];
-
   return (
-    <section className="bg-black py-16">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="bg-[#fff9ed] py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-5 md:px-6">
+        <div className="mb-12 max-w-4xl">
+          <p className="fedup-eyebrow mb-4">About FEDUP</p>
+          <h2 className="fedup-title text-4xl md:text-6xl">More than a reality show</h2>
+          <p className="fedup-body mt-5 text-lg md:text-xl">
+            FEDUP follows women who have overcome adversity and are ready to inspire others through a journey that is raw, layered, and made for premium documentary television.
+          </p>
+        </div>
 
-        <p className="mb-4 text-center text-sm font-bold tracking-[0.4em] text-yellow-500">
-          ABOUT FEDUP
-        </p>
-
-        <h2 className="mb-6 text-center text-4xl font-black md:text-5xl text-white">
-          More Than A Reality Show
-        </h2>
-
-        <p className="mx-auto mb-12 max-w-4xl text-center text-lg md:text-xl text-gray-300">
-          FEDUP follows women who have overcome adversity and are ready to
-          inspire others through their journey.
-        </p>
-
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-3">
           {cards.map((card) => (
-            <div
-              key={card.title}
-              className="rounded-2xl border border-yellow-500/20 bg-zinc-900 p-8 transition hover:border-yellow-500 hover:shadow-[0_0_30px_rgba(234,179,8,0.15)]"
-            >
-              <h3 className="mb-4 text-2xl font-black text-yellow-500">
-                {card.title}
-              </h3>
-
-              <p className="text-gray-300">
-                {card.text}
-              </p>
+            <div key={card.title} className="premium-card p-7 md:p-8">
+              <h3 className="mb-4 text-2xl font-black text-[#E5C76B]">{card.title}</h3>
+              <p className="leading-7 text-[#5c5144]">{card.text}</p>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
