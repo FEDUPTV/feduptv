@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "fedup_application";
 const TOTAL_STEPS = 6;
+const ALLOWED_FILE_EXTENSIONS = new Set(["jpg", "jpeg", "png", "mp4", "mov"]);
+const REJECTED_IPHONE_EXTENSIONS = new Set(["heic", "heif"]);
+const MAX_PHOTO_SIZE = 10 * 1024 * 1024;
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024;
+const SUBMISSION_RETRY_MESSAGE =
+  "We were unable to submit your application. Please review your information and try again.";
 
 type FormData = {
   first_name: string;
@@ -114,8 +120,47 @@ export default function ApplicationWizard() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const parseBirthdate = (birthdate: string) => {
+    const value = birthdate.trim();
+    const slashMatch = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    const dashMatch = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+
+    const month = slashMatch
+      ? Number(slashMatch[1])
+      : dashMatch
+      ? Number(dashMatch[2])
+      : NaN;
+    const day = slashMatch
+      ? Number(slashMatch[2])
+      : dashMatch
+      ? Number(dashMatch[3])
+      : NaN;
+    const year = slashMatch
+      ? Number(slashMatch[3])
+      : dashMatch
+      ? Number(dashMatch[1])
+      : NaN;
+
+    if (!month || !day || !year) return null;
+
+    const birth = new Date(year, month - 1, day);
+
+    if (
+      birth.getFullYear() !== year ||
+      birth.getMonth() !== month - 1 ||
+      birth.getDate() !== day
+    ) {
+      return null;
+    }
+
+    return birth;
+  };
+
   const getAgeFromBirthdate = (birthdate: string) => {
-    const birth = new Date(birthdate);
+    const birth = parseBirthdate(birthdate);
+
+    if (!birth) return null;
+
     const today = new Date();
 
     let age = today.getFullYear() - birth.getFullYear();
@@ -129,6 +174,70 @@ export default function ApplicationWizard() {
     }
 
     return age;
+  };
+
+  const getFileExtension = (fileName: string) =>
+    fileName.split(".").pop()?.toLowerCase() || "";
+
+  const isVideoFile = (file: File) => {
+    const extension = getFileExtension(file.name);
+    return extension === "mp4" || extension === "mov";
+  };
+
+  const validateSelectedFiles = (selectedFiles: File[]) => {
+    if (selectedFiles.length === 0) {
+      return "Please upload at least one photo or video before submitting.";
+    }
+
+    if (selectedFiles.length > 10) {
+      return "Please upload no more than 10 files.";
+    }
+
+    const rejectedIphoneFile = selectedFiles.find((file) =>
+      REJECTED_IPHONE_EXTENSIONS.has(getFileExtension(file.name))
+    );
+
+    if (rejectedIphoneFile) {
+      return "iPhone HEIC photos are not currently supported. Please convert to JPG and try again.";
+    }
+
+    const unsupportedFile = selectedFiles.find(
+      (file) => !ALLOWED_FILE_EXTENSIONS.has(getFileExtension(file.name))
+    );
+
+    if (unsupportedFile) {
+      return "One of your uploaded files is not supported. Please upload JPG, JPEG, PNG, MP4, or MOV files.";
+    }
+
+    const oversizedFile = selectedFiles.find((file) =>
+      isVideoFile(file)
+        ? file.size > MAX_VIDEO_SIZE
+        : file.size > MAX_PHOTO_SIZE
+    );
+
+    if (oversizedFile) {
+      return isVideoFile(oversizedFile)
+        ? "Videos must be under 50MB."
+        : "Photos must be under 10MB.";
+    }
+
+    return "";
+  };
+
+  const getSubmissionErrorMessage = (error: unknown) => {
+    if (error instanceof Error && error.message.trim()) {
+      if (error.message === "Failed to fetch") {
+        return "We could not reach the server. Please check your connection and try again.";
+      }
+
+      if (error.message.includes("expected pattern")) {
+        return "Please check your birthdate, email address, or uploaded files and try again.";
+      }
+
+      return error.message;
+    }
+
+    return SUBMISSION_RETRY_MESSAGE;
   };
 
   const goNext = () => {
@@ -278,10 +387,11 @@ export default function ApplicationWizard() {
 
       if (
         !formData.birthdate ||
+        applicantAge === null ||
         applicantAge < 18 ||
         applicantAge > 80
       ) {
-        showError("Applicants must be between 18 and 80 years old.");
+        showError("Please enter a valid birthdate in MM/DD/YYYY format. Applicants must be between 18 and 80 years old.");
         return;
       }
 
@@ -343,25 +453,10 @@ export default function ApplicationWizard() {
       }
 
       const selectedFiles = Array.from(files);
+      const fileError = validateSelectedFiles(selectedFiles);
 
-      if (selectedFiles.length > 10) {
-        showError("Maximum 10 files allowed.");
-        setSubmitting(false);
-        return;
-      }
-
-      const invalidFile = selectedFiles.find((file: File) =>
-        file.type.startsWith("video/")
-          ? file.size > 50 * 1024 * 1024
-          : file.size > 10 * 1024 * 1024
-      );
-
-      if (invalidFile) {
-        showError(
-          invalidFile.type.startsWith("video/")
-            ? "Videos must be under 50MB."
-            : "Photos must be under 10MB."
-        );
+      if (fileError) {
+        showError(fileError);
         setSubmitting(false);
         return;
       }
@@ -375,24 +470,32 @@ export default function ApplicationWizard() {
           payload.append("files", file);
         });
       }
-const response = await fetch("/api/apply", {
+      const response = await fetch("/api/apply", {
         method: "POST",
         body: payload,
       });
 
-      const result = await response.json();
+      const result = await response
+        .json()
+        .catch(() => ({
+          error: SUBMISSION_RETRY_MESSAGE,
+        }));
 
       if (!response.ok) {
-        throw new Error(result.error || "Submission failed");
+        throw new Error(result.error || SUBMISSION_RETRY_MESSAGE);
       }
 
       localStorage.removeItem(STORAGE_KEY);
 
+      console.log("APPLICATION SUBMISSION SUCCESS", {
+        successPage: "/apply/success",
+      });
+
       window.location.assign("/apply/success");
 
     } catch (error) {
-      console.error(error);
-      showError(error instanceof Error ? error.message : "Submission failed.");
+      console.error("APPLICATION SUBMIT ERROR", error);
+      showError(getSubmissionErrorMessage(error));
       setSubmitting(false);
     }
   };
@@ -539,24 +642,9 @@ const response = await fetch("/api/apply", {
                   value={formData.birthdate}
                   onChange={(e) => updateField("birthdate", e.target.value)}
                   className={inputClass}
-                  max={
-                    new Date(
-                      new Date().setFullYear(
-                        new Date().getFullYear() - 18
-                      )
-                    )
-                      .toISOString()
-                      .split("T")[0]
-                  }
-                  min={
-                    new Date(
-                      new Date().setFullYear(
-                        new Date().getFullYear() - 80
-                      )
-                    )
-                      .toISOString()
-                      .split("T")[0]
-                  }
+                  autoComplete="bday"
+                  inputMode="numeric"
+                  enterKeyHint="next"
                 />
               </div>
 
@@ -593,7 +681,7 @@ const response = await fetch("/api/apply", {
                 <label className={labelClass}>Email *</label>
                 <input
                   name="email"
-                  type="email"
+                  type="text"
                   value={formData.email}
                   onChange={(e) =>
                     updateField("email", e.target.value.trim().toLowerCase())
@@ -1117,13 +1205,26 @@ const response = await fetch("/api/apply", {
                 type="file"
                 multiple
                 accept=".jpg,.jpeg,.png,.mp4,.mov"
-                onChange={(e) => setFiles(e.target.files)}
+                onChange={(e) => {
+                  const selectedFiles = Array.from(e.target.files || []);
+                  const fileError = validateSelectedFiles(selectedFiles);
+
+                  if (fileError) {
+                    e.target.value = "";
+                    setFiles(null);
+                    showError(fileError);
+                    return;
+                  }
+
+                  if (formError) setFormError("");
+                  setFiles(e.target.files);
+                }}
                 className="w-full rounded bg-white p-4 text-[#17130e]"
               />
 
               <p className="mt-3 text-sm text-gray-500">
-                You may upload multiple image or video files. Files will be organized
-                into your applicant folder after submission.
+                Upload JPG, JPEG, PNG, MP4, or MOV files only. HEIC and HEIF
+                photos are not currently supported.
               </p>
 
               {files && (

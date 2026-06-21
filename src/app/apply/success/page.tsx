@@ -1,4 +1,12 @@
+"use client";
+
+import { useEffect } from "react";
+
 export default function SuccessPage() {
+  useEffect(() => {
+    console.log("APPLICATION SUCCESS PAGE VIEWED");
+  }, []);
+
   return (
     <main className="cinematic-shell min-h-screen text-[#17130e] flex items-center justify-center">
       <div className="premium-card max-w-2xl text-center p-8 md:p-10">
