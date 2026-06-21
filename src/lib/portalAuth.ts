@@ -1,23 +1,16 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { env } from "./env";
 
 const PORTAL_COOKIE = "fedup_portal_session";
 
 function getPortalPassword() {
-  return (
-    process.env.PORTAL_PASSWORD ||
-    process.env.NEXT_PUBLIC_PORTAL_PASSWORD ||
-    "FedUp2026!"
-  );
+  return env.portalPassword;
 }
 
 function getSessionSecret() {
-  return (
-    process.env.PORTAL_SESSION_SECRET ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    getPortalPassword()
-  );
+  return env.portalSessionSecret;
 }
 
 export function getPortalSessionValue() {

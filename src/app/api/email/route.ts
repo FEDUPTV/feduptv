@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { resend } from "../../../lib/resend";
+import { env } from "../../../lib/env";
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!process.env.RESEND_API_KEY) {
+    if (!env.resendApiKey) {
       return NextResponse.json({
         success: false,
         error: "RESEND_API_KEY is not configured yet.",
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
     }
 
     const result = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "FEDUP <onboarding@resend.dev>",
+      from: env.resendFromEmail,
       to: body.to,
       subject: body.subject,
       html: `<div>${body.message}</div>`,

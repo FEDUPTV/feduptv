@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../../../lib/supabase-admin";
 import { isPortalAuthenticated, unauthorized } from "../../../../../lib/portalAuth";
+import { getApplicantDisplayAge } from "../../../../../lib/applicantAge";
+
+function withComputedAge<T extends { age?: unknown; birthdate?: unknown }>(
+  applicant: T
+) {
+  return {
+    ...applicant,
+    age: getApplicantDisplayAge(applicant.age, applicant.birthdate),
+  };
+}
 
 export async function POST(
   request: Request,
@@ -56,5 +66,5 @@ export async function POST(
     );
   }
 
-  return NextResponse.json({ success: true, applicant: data });
+  return NextResponse.json({ success: true, applicant: withComputedAge(data) });
 }

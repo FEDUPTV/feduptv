@@ -8,9 +8,14 @@ import {
   UploadValidationError,
   uploadApplicantFiles,
 } from "../../../lib/uploadApplicantFiles";
+import {
+  calculateApplicantAge,
+  formatApplicantBirthdate,
+} from "../../../lib/applicantAge";
 
 const GENERIC_SUBMISSION_ERROR =
   "We were unable to submit your application. Please review your information and try again.";
+const activeSubmissionKeys = new Set<string>();
 
 function applicationError(message: string, status = 400) {
   console.log("APPLICATION VALIDATION FAILURE", { status, message });
@@ -53,6 +58,35 @@ function isBadEmail(email: string) {
     email.length > 120 ||
     !emailRegex.test(email)
   );
+}
+
+function normalizeText(value: unknown) {
+  return String(value ?? "").trim();
+}
+
+function normalizeOptionalText(value: unknown) {
+  return normalizeText(value);
+}
+
+function getBoundedInt(value: unknown, min: number, max: number) {
+  if (value === "" || value === undefined || value === null) return null;
+
+  const parsed = Number(value);
+
+  if (!Number.isInteger(parsed) || parsed < min || parsed > max) {
+    return null;
+  }
+
+  return parsed;
+}
+
+function isValidSocialHandle(value: unknown) {
+  const text = normalizeText(value);
+
+  if (!text) return true;
+  if (text.length > 200) return false;
+
+  return !/[\u0000-\u001f\u007f]/.test(text);
 }
 
 function formatTimeServed(years: unknown, months: unknown) {
@@ -99,6 +133,8 @@ async function findBannedApplicant(email: string, phone: string) {
 }
 
 export async function POST(request: Request) {
+  let activeSubmissionKey: string | null = null;
+
   try {
     const ipAddress =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -140,11 +176,33 @@ export async function POST(request: Request) {
       return applicationError(GENERIC_SUBMISSION_ERROR);
     }
 
+    const requestId = normalizeText(body.request_id) || uuidv4();
+    const cleanFirstName = normalizeText(body.first_name);
+    const cleanLastName = normalizeText(body.last_name);
+    const cleanPhone = normalizeText(body.phone).replace(/\D/g, "");
+    const cleanBirthdate = normalizeText(body.birthdate);
+    const formattedBirthdate = formatApplicantBirthdate(cleanBirthdate);
+    const calculatedAge = calculateApplicantAge(cleanBirthdate);
+    const timeServedYears = getBoundedInt(body.time_served_years, 0, 50);
+    const timeServedMonths = getBoundedInt(body.time_served_months, 0, 11);
+    const childrenValue = normalizeText(body.children).toLowerCase();
+    const childrenCount =
+      childrenValue === "yes"
+        ? getBoundedInt(body.children_count, 1, 30)
+        : 0;
+    const socialProfiles = [
+      body.instagram,
+      body.tiktok,
+      body.facebook,
+    ];
+
+    console.log("APPLICATION REQUEST ID", { requestId });
+
     if (
-      !body.first_name ||
-      !body.last_name ||
+      !cleanFirstName ||
+      !cleanLastName ||
       !body.email ||
-      !body.phone
+      !cleanPhone
     ) {
       return applicationError(
         "Please complete all required fields before submitting."
@@ -156,8 +214,54 @@ export async function POST(request: Request) {
         .trim()
         .toLowerCase();
 
+    if (
+      !calculatedAge ||
+      calculatedAge < 18 ||
+      calculatedAge > 100
+    ) {
+      return applicationError(
+        "Please enter a valid birthdate. Applicants must be between 18 and 100 years old."
+      );
+    }
+
     if (isBadEmail(cleanEmail)) {
       return applicationError("Please enter a valid email address.");
+    }
+
+    if (cleanPhone.length !== 10) {
+      return applicationError(
+        "Please enter a valid 10-digit phone number."
+      );
+    }
+
+    if (timeServedYears === null || timeServedMonths === null) {
+      return applicationError(
+        "Please enter valid time served values."
+      );
+    }
+
+    if (childrenValue !== "yes" && childrenValue !== "no") {
+      return applicationError(
+        "Please tell us whether you have children."
+      );
+    }
+
+    if (childrenValue === "yes" && childrenCount === null) {
+      return applicationError(
+        "Please enter a valid number of children."
+      );
+    }
+
+    if (!socialProfiles.some((value) => normalizeText(value))) {
+      return applicationError(
+        "Please provide at least one social media profile."
+      );
+    }
+
+    if (!socialProfiles.every(isValidSocialHandle)) {
+      return applicationError(
+        "Please check your social media profiles and remove any unsupported characters."
+      );
     }
 
     if (
@@ -180,9 +284,6 @@ export async function POST(request: Request) {
       );
     }
 
-    const cleanPhone =
-      String(body.phone || "").replace(/\D/g, "");
-
     const bannedApplicant = await findBannedApplicant(cleanEmail, cleanPhone);
 
     if (bannedApplicant) {
@@ -197,7 +298,7 @@ export async function POST(request: Request) {
         .from("applicants")
         .select("id, ip_address, created_at")
         .eq("ip_address", ipAddress)
-        .limit(1);
+        .limit(2);
 
     if (sameIpError) {
       console.error("APPLICATION SUPABASE DUPLICATE IP ERROR", {
@@ -245,12 +346,22 @@ export async function POST(request: Request) {
       );
     }
 
+    activeSubmissionKey = `${cleanEmail}:${cleanPhone}`;
+
+    if (activeSubmissionKeys.has(activeSubmissionKey)) {
+      return applicationError(
+        "Your application is already being submitted. Please wait a moment before trying again.",
+        409
+      );
+    }
+
+    activeSubmissionKeys.add(activeSubmissionKey);
 
 
     const folderName = `${sanitizeFolderSegment(
-      body.first_name,
+      cleanFirstName,
       "candidate"
-    )}-${sanitizeFolderSegment(body.last_name, "unknown")}-${uuidv4()}`;
+    )}-${sanitizeFolderSegment(cleanLastName, "unknown")}-${uuidv4()}`;
 
     const uploadedFiles = formData.getAll("files").filter(
       (value): value is File => value instanceof File && value.size > 0
@@ -259,6 +370,7 @@ export async function POST(request: Request) {
     console.log("APPLICATION UPLOADS RECEIVED", {
       count: uploadedFiles.length,
       folderName,
+      requestId,
     });
 
     const uploaded = await uploadApplicantFiles(
@@ -274,15 +386,15 @@ export async function POST(request: Request) {
 
     const castingScore =
       20 +
-      (body.instagram || body.tiktok || body.facebook ? 15 : 0) +
+      (socialProfiles.some((value) => normalizeText(value)) ? 15 : 0) +
       (body.fed_up_story?.length > 250 ? 15 : 0) +
       (body.selection_reason?.length > 250 ? 15 : 0) +
       (body.can_travel_orlando === "yes" ? 15 : 0) +
       (duplicateFlag ? -20 : 0);
 
     const timeServed = formatTimeServed(
-      body.time_served_years,
-      body.time_served_months
+      timeServedYears,
+      timeServedMonths
     );
 
     const { data, error } =
@@ -290,49 +402,47 @@ export async function POST(request: Request) {
         .from("applicants")
         .insert([
           {
-            first_name: body.first_name,
-            last_name: body.last_name,
-            prison_name: body.prison_name,
+            first_name: cleanFirstName,
+            last_name: cleanLastName,
+            prison_name: normalizeText(body.prison_name),
 
-            age: toInt(body.age),
-            birthdate: body.birthdate || null,
+            age: calculatedAge,
+            birthdate: formattedBirthdate,
 
             phone: body.phone,
             email: cleanEmail,
-            address: body.address,
+            address: normalizeText(body.address),
 
-            charges: body.charges,
+            charges: normalizeText(body.charges),
             time_served: timeServed,
-            jurisdiction: body.jurisdiction,
+            jurisdiction: normalizeText(body.jurisdiction),
 
-            children: body.children,
-            children_count: toInt(
-              body.children_count
-            ),
+            children: childrenValue,
+            children_count: childrenCount,
 
-            occupation: body.occupation,
+            occupation: normalizeOptionalText(body.occupation),
 
-            instagram: body.instagram,
-            tiktok: body.tiktok,
-            facebook: body.facebook,
+            instagram: normalizeOptionalText(body.instagram),
+            tiktok: normalizeOptionalText(body.tiktok),
+            facebook: normalizeOptionalText(body.facebook),
 
             fed_up_story:
-              body.fed_up_story,
+              normalizeText(body.fed_up_story),
 
             underestimated_story:
-              body.underestimated_story,
+              normalizeText(body.underestimated_story),
 
             shocking_truth:
-              body.shocking_truth,
+              normalizeText(body.shocking_truth),
 
             confrontation_story:
-              body.confrontation_story,
+              normalizeText(body.confrontation_story),
 
             selection_reason:
-              body.selection_reason,
+              normalizeText(body.selection_reason),
 
             scroll_stopper_story:
-              body.scroll_stopper_story,
+              normalizeText(body.scroll_stopper_story),
 
             prison_story_rating:
               toInt(
@@ -345,7 +455,7 @@ export async function POST(request: Request) {
               body.can_travel_orlando,
 
             producer_notes:
-              body.producer_notes,
+              normalizeOptionalText(body.producer_notes),
 
             application_folder:
               folderName,
@@ -375,16 +485,20 @@ export async function POST(request: Request) {
     console.log("APPLICATION DATABASE INSERT COMPLETE", {
       applicantId: data.id,
       folderName,
+      requestId,
     });
 
     const emailResults = await Promise.allSettled([
       sendApplicantEmail(
         cleanEmail,
-        body.first_name
+        cleanFirstName
       ),
       sendCastingNotification({
         ...body,
+        first_name: cleanFirstName,
+        last_name: cleanLastName,
         email: cleanEmail,
+        phone: body.phone,
       }),
     ]);
 
@@ -406,6 +520,7 @@ export async function POST(request: Request) {
       uploadedPhotoCount: uploaded.photo_urls.length,
       uploadedVideoCount: uploaded.video_urls.length,
       successPage: "/apply/success",
+      requestId,
     });
 
     return NextResponse.json({
@@ -439,5 +554,9 @@ export async function POST(request: Request) {
       },
       { status: 500 }
     );
+  } finally {
+    if (activeSubmissionKey) {
+      activeSubmissionKeys.delete(activeSubmissionKey);
+    }
   }
 }

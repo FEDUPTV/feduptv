@@ -3,6 +3,17 @@ import { supabaseAdmin } from "../../../../lib/supabase-admin";
 import { resend } from "../../../../lib/resend";
 import { getStatusEmail } from "../../../../lib/emailTemplates";
 import { isPortalAuthenticated, unauthorized } from "../../../../lib/portalAuth";
+import { getApplicantDisplayAge } from "../../../../lib/applicantAge";
+import { env } from "../../../../lib/env";
+
+function withComputedAge<T extends { age?: unknown; birthdate?: unknown }>(
+  applicant: T
+) {
+  return {
+    ...applicant,
+    age: getApplicantDisplayAge(applicant.age, applicant.birthdate),
+  };
+}
 
 export async function GET(
   request: Request,
@@ -27,7 +38,7 @@ export async function GET(
     );
   }
 
-  return NextResponse.json({ success: true, applicant: data });
+  return NextResponse.json({ success: true, applicant: withComputedAge(data) });
 }
 
 export async function PATCH(
@@ -72,13 +83,11 @@ export async function PATCH(
   if (
     emailTemplate &&
     data.email &&
-    process.env.RESEND_API_KEY
+    env.resendApiKey
   ) {
     try {
       await resend.emails.send({
-        from:
-          process.env.RESEND_FROM_EMAIL ||
-          "FEDUP Casting <casting@feduptv.com>",
+        from: env.resendFromEmail,
         to: data.email,
         subject: emailTemplate.subject,
         html: emailTemplate.html,
@@ -88,7 +97,7 @@ export async function PATCH(
     }
   }
 
-  return NextResponse.json({ success: true, applicant: data });
+  return NextResponse.json({ success: true, applicant: withComputedAge(data) });
 }
 
 

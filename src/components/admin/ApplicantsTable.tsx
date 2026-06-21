@@ -10,6 +10,8 @@ type Candidate = {
   email: string | null;
   phone: string | null;
   instagram: string | null;
+  age?: number | string | null;
+  birthdate?: string | null;
   status: string | null;
   created_at: string | null;
   producer_notes?: string | null;
@@ -34,6 +36,11 @@ const needsActionStatuses = ["New", "Under Review"];
 function csvEscape(value: unknown) {
   const text = String(value ?? "");
   return `"${text.replace(/"/g, '""')}"`;
+}
+
+function displayValue(value: unknown) {
+  if (value === null || value === undefined || value === "") return "-";
+  return String(value);
 }
 
 export default function CandidatesTable() {
@@ -137,9 +144,10 @@ export default function CandidatesTable() {
 
   function exportCsv() {
     const rows = [
-      ["Name", "Email", "Phone", "Instagram", "Status", "Submitted", "Producer Notes"],
+      ["Name", "Age", "Email", "Phone", "Instagram", "Status", "Submitted", "Producer Notes"],
       ...filteredCandidates.map((applicant) => [
         `${applicant.first_name || ""} ${applicant.last_name || ""}`.trim(),
+        displayValue(applicant.age),
         applicant.email || "",
         applicant.phone || "",
         applicant.instagram || "",
@@ -265,11 +273,11 @@ export default function CandidatesTable() {
                 <div className="mt-4 grid grid-cols-2 gap-2 text-sm text-gray-400">
                   <div>
                     <p className="text-xs uppercase text-gray-600">Phone</p>
-                    <p>{applicant.phone || "-"}</p>
+                    <p>{displayValue(applicant.phone)}</p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase text-gray-600">Submitted</p>
-                    <p>{applicant.created_at ? new Date(applicant.created_at).toLocaleDateString() : "-"}</p>
+                    <p className="text-xs uppercase text-gray-600">Age</p>
+                    <p>{displayValue(applicant.age)}</p>
                   </div>
                 </div>
                 {applicant.producer_notes && (
@@ -302,6 +310,7 @@ export default function CandidatesTable() {
               <thead className="bg-black text-xs uppercase tracking-wide text-gray-500">
                 <tr>
                   <th className="p-4">Name</th>
+                  <th className="p-4">Age</th>
                   <th className="p-4">Email</th>
                   <th className="p-4">Phone</th>
                   <th className="p-4">Status</th>
@@ -319,6 +328,7 @@ export default function CandidatesTable() {
                         {applicant.first_name || "Unknown"} {applicant.last_name || ""}
                       </Link>
                     </td>
+                    <td className="p-4 text-gray-300">{displayValue(applicant.age)}</td>
                     <td className="p-4 text-gray-300">{applicant.email || "-"}</td>
                     <td className="p-4 text-gray-300">{applicant.phone || "-"}</td>
                     <td className="p-4">

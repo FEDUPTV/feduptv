@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "../../../lib/supabase-admin";
 import { isPortalAuthenticated, unauthorized } from "../../../lib/portalAuth";
+import { getApplicantDisplayAge } from "../../../lib/applicantAge";
+
+function withComputedAge<T extends { age?: unknown; birthdate?: unknown }>(
+  applicant: T
+) {
+  return {
+    ...applicant,
+    age: getApplicantDisplayAge(applicant.age, applicant.birthdate),
+  };
+}
 
 export async function GET() {
   if (!(await isPortalAuthenticated())) return unauthorized();
@@ -20,6 +30,6 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    applicants: data,
+    applicants: (data || []).map(withComputedAge),
   });
 }

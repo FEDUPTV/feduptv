@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { calculateApplicantAge } from "../../lib/applicantAge";
 
 const STORAGE_KEY = "fedup_application";
 const TOTAL_STEPS = 6;
@@ -101,6 +102,7 @@ export default function ApplicationWizard() {
   const [files, setFiles] = useState<FileList | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
+  const submitLockedRef = useRef(false);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
@@ -120,60 +122,8 @@ export default function ApplicationWizard() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const parseBirthdate = (birthdate: string) => {
-    const value = birthdate.trim();
-    const slashMatch = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    const dashMatch = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-
-    const month = slashMatch
-      ? Number(slashMatch[1])
-      : dashMatch
-      ? Number(dashMatch[2])
-      : NaN;
-    const day = slashMatch
-      ? Number(slashMatch[2])
-      : dashMatch
-      ? Number(dashMatch[3])
-      : NaN;
-    const year = slashMatch
-      ? Number(slashMatch[3])
-      : dashMatch
-      ? Number(dashMatch[1])
-      : NaN;
-
-    if (!month || !day || !year) return null;
-
-    const birth = new Date(year, month - 1, day);
-
-    if (
-      birth.getFullYear() !== year ||
-      birth.getMonth() !== month - 1 ||
-      birth.getDate() !== day
-    ) {
-      return null;
-    }
-
-    return birth;
-  };
-
   const getAgeFromBirthdate = (birthdate: string) => {
-    const birth = parseBirthdate(birthdate);
-
-    if (!birth) return null;
-
-    const today = new Date();
-
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birth.getDate())
-    ) {
-      age--;
-    }
-
-    return age;
+    return calculateApplicantAge(birthdate);
   };
 
   const getFileExtension = (fileName: string) =>
@@ -389,9 +339,9 @@ export default function ApplicationWizard() {
         !formData.birthdate ||
         applicantAge === null ||
         applicantAge < 18 ||
-        applicantAge > 80
+        applicantAge > 100
       ) {
-        showError("Please enter a valid birthdate in MM/DD/YYYY format. Applicants must be between 18 and 80 years old.");
+        showError("Please enter a valid birthdate in MM/DD/YYYY format. Applicants must be between 18 and 100 years old.");
         return;
       }
 
@@ -429,8 +379,9 @@ export default function ApplicationWizard() {
 
   const handleSubmit = async () => {
 
-    if (submitting) return;
+    if (submitting || submitLockedRef.current) return;
 
+    submitLockedRef.current = true;
     setFormError("");
     setSubmitting(true);
 
@@ -462,8 +413,15 @@ export default function ApplicationWizard() {
       }
 
       const payload = new FormData();
+      const requestId =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-      payload.append("data", JSON.stringify(formData));
+      payload.append("data", JSON.stringify({
+        ...formData,
+        request_id: requestId,
+      }));
 
       if (files) {
         Array.from(files).forEach((file) => {
@@ -494,9 +452,10 @@ export default function ApplicationWizard() {
       window.location.assign("/apply/success");
 
     } catch (error) {
-      console.error("APPLICATION SUBMIT ERROR", error);
+      console.error("APPLICATION ERROR", error);
       showError(getSubmissionErrorMessage(error));
       setSubmitting(false);
+      submitLockedRef.current = false;
     }
   };
 

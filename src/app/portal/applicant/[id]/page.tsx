@@ -241,8 +241,11 @@ export default function CandidateDetailPage() {
   const yesNo = (value: string | boolean | undefined) => {
     if (value === true || value === "yes" || value === "Yes") return "Yes";
     if (value === false || value === "no" || value === "No") return "No";
-    return value || "-";
+    return displayValue(value);
   };
+
+  const photoUrls = Array.isArray(applicant.photo_urls) ? applicant.photo_urls : [];
+  const videoUrls = Array.isArray(applicant.video_urls) ? applicant.video_urls : [];
 
   return (
     <main className="min-h-screen bg-black p-6 text-white md:p-10">
@@ -256,10 +259,10 @@ export default function CandidateDetailPage() {
             Candidate Profile
           </p>
           <h1 className="text-4xl font-black md:text-6xl">
-            {applicant.first_name} {applicant.last_name}
+            {displayValue(applicant.first_name)} {displayValue(applicant.last_name)}
           </h1>
           <p className="mt-3 text-gray-400">
-            {applicant.email || "-"} | {applicant.phone || "-"}
+            {displayValue(applicant.email)} | {displayValue(applicant.phone)}
           </p>
 
           {applicant.banned && (
@@ -400,7 +403,7 @@ export default function CandidateDetailPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Candidate ID</span>
-                  <span>{applicant.id?.slice(0,8)}</span>
+                  <span>{applicant.id?.slice(0,8) || "-"}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -414,7 +417,7 @@ export default function CandidateDetailPage() {
 
                 <div className="flex justify-between">
                   <span className="text-gray-400">Photos</span>
-                  <span>{applicant.photo_urls?.length || 0}</span>
+                  <span>{photoUrls.length}</span>
                 </div>
 
                 <div className="flex justify-between">
@@ -473,8 +476,8 @@ export default function CandidateDetailPage() {
 
             <Card title="Uploaded Media">
               <MediaGallery
-                photos={Array.isArray(applicant.photo_urls) ? applicant.photo_urls : []}
-                videos={Array.isArray(applicant.video_urls) ? applicant.video_urls : []}
+                photos={photoUrls}
+                videos={videoUrls}
               />
             </Card>
 
@@ -534,11 +537,16 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
   );
 }
 
+function displayValue(value: React.ReactNode) {
+  if (value === null || value === undefined || value === "") return "-";
+  return value;
+}
+
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="grid gap-2 border-b border-zinc-800 pb-3 md:grid-cols-3">
       <p className="font-bold text-gray-400">{label}</p>
-      <p className="md:col-span-2">{value || "-"}</p>
+      <p className="md:col-span-2">{displayValue(value)}</p>
     </div>
   );
 }
@@ -547,7 +555,7 @@ function Long({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="border-b border-zinc-800 pb-4">
       <p className="mb-2 font-bold text-gray-400">{label}</p>
-      <p className="whitespace-pre-wrap leading-relaxed text-gray-200">{value || "-"}</p>
+      <p className="whitespace-pre-wrap leading-relaxed text-gray-200">{displayValue(value)}</p>
     </div>
   );
 }
