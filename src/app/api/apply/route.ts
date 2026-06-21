@@ -220,7 +220,7 @@ export async function POST(request: Request) {
       calculatedAge > 100
     ) {
       return applicationError(
-        "Please enter a valid birthdate. Applicants must be between 18 and 100 years old."
+        "Applicants must be 18 years or older."
       );
     }
 

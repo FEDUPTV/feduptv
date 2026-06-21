@@ -341,7 +341,7 @@ export default function ApplicationWizard() {
         applicantAge < 18 ||
         applicantAge > 100
       ) {
-        showError("Please enter a valid birthdate in MM/DD/YYYY format. Applicants must be between 18 and 100 years old.");
+        showError("Applicants must be 18 years or older.");
         return;
       }
 

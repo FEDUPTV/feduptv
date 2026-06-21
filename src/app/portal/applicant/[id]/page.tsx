@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -489,9 +490,11 @@ export default function CandidateDetailPage() {
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4"
           onClick={() => setSelectedMedia(null)}
         >
-          <img
+          <Image
             src={selectedMedia}
             alt="Selected applicant media"
+            width={1200}
+            height={900}
             className="max-h-[90vh] max-w-[95vw] rounded-2xl object-contain"
           />
         </div>
@@ -586,9 +589,11 @@ function MediaGallery({
                 onClick={() => setActivePhoto(url)}
                 className="group overflow-hidden rounded-xl border border-yellow-500/20 bg-black"
               >
-                <img
+                <Image
                   src={url}
                   alt={`Candidate photo ${index + 1}`}
+                  width={320}
+                  height={240}
                   className="h-36 w-full object-cover transition duration-300 group-hover:scale-105 md:h-44"
                 />
               </button>
@@ -625,9 +630,11 @@ function MediaGallery({
           className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4"
           onClick={() => setActivePhoto(null)}
         >
-          <img
+          <Image
             src={activePhoto}
             alt="Candidate photo preview"
+            width={1200}
+            height={900}
             className="max-h-[90vh] max-w-[95vw] rounded-2xl object-contain"
           />
         </div>
