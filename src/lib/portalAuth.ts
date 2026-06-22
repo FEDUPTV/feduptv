@@ -4,13 +4,28 @@ import { NextResponse } from "next/server";
 import { env } from "./env";
 
 const PORTAL_COOKIE = "fedup_portal_session";
+const PORTAL_EMERGENCY_DISABLED = true;
 
 function getPortalPassword() {
+  if (!env.portalPassword) {
+    throw new Error("Missing required environment variable: PORTAL_PASSWORD");
+  }
+
   return env.portalPassword;
 }
 
 function getSessionSecret() {
+  if (!env.portalSessionSecret) {
+    throw new Error(
+      "Missing required environment variable: PORTAL_SESSION_SECRET"
+    );
+  }
+
   return env.portalSessionSecret;
+}
+
+export function isPortalDisabled() {
+  return PORTAL_EMERGENCY_DISABLED || env.portalDisabled;
 }
 
 export function getPortalSessionValue() {
@@ -30,6 +45,8 @@ export function isCorrectPortalPassword(password: string) {
 }
 
 export async function isPortalAuthenticated() {
+  if (isPortalDisabled()) return false;
+
   const session = (await cookies()).get(PORTAL_COOKIE)?.value;
   const expected = getPortalSessionValue();
 

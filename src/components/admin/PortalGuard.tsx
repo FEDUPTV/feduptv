@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from "react";
 export default function PortalGuard({ children }: { children: React.ReactNode }) {
   const [allowed, setAllowed] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [disabled, setDisabled] = useState(false);
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
 
@@ -13,7 +14,10 @@ export default function PortalGuard({ children }: { children: React.ReactNode })
 
     fetch("/api/portal/session")
       .then((response) => response.json())
-      .then((data) => setAllowed(Boolean(data.authenticated)))
+      .then((data) => {
+        setDisabled(Boolean(data.disabled));
+        setAllowed(Boolean(data.authenticated));
+      })
       .finally(() => setChecking(false));
   }, []);
 
@@ -31,7 +35,11 @@ export default function PortalGuard({ children }: { children: React.ReactNode })
       setAllowed(true);
       setPassword("");
     } else {
-      setError("Incorrect password.");
+      setError(
+        response.status === 503
+          ? "Portal is temporarily disabled."
+          : "Incorrect password."
+      );
     }
   }
 
@@ -41,6 +49,21 @@ export default function PortalGuard({ children }: { children: React.ReactNode })
     return (
       <main className="flex min-h-screen items-center justify-center bg-black p-6 text-white">
         <p className="text-gray-400">Checking portal access...</p>
+      </main>
+    );
+  }
+
+  if (disabled) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-black p-6 text-white">
+        <div className="w-full max-w-md rounded-2xl border border-red-500/30 bg-zinc-900 p-8">
+          <h1 className="mb-4 text-3xl font-black text-red-400">
+            Portal Disabled
+          </h1>
+          <p className="text-gray-400">
+            Access is temporarily unavailable.
+          </p>
+        </div>
       </main>
     );
   }
