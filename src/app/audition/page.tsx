@@ -1,96 +1,171 @@
-const infoSections = [
-  {
-    title: "Event Overview",
-    body: [
-      ["Audition Weekend", "July 10-12, 2026"],
-      ["Audition Day", "July 11, 2026"],
-      ["Location", "Orlando, Florida"],
-    ],
-  },
-  {
-    title: "Important Dates",
-    body: [
-      ["Hotel Booking Deadline", "July 2, 2026"],
-      ["Check-In", "July 10, 2026"],
-      ["Audition Day", "July 11, 2026"],
-      ["Departure", "July 12, 2026"],
-    ],
-  },
+import Link from "next/link";
+
+const overview = [
+  ["Audition city", "Orlando, Florida"],
+  ["Audition day", "July 11, 2026"],
+  ["Weekend window", "July 10-12, 2026"],
+  ["Application status", "Apply before arrival"],
+];
+
+const bringItems = [
+  "Government-issued photo ID",
+  "Application confirmation",
+  "Any approved supporting documents connected to your story",
+  "Comfortable, camera-appropriate attire",
+  "A clear understanding of the story you are ready to tell",
+];
+
+const faqs = [
+  [
+    "Does applying guarantee an audition?",
+    "No. Applications are reviewed by the casting team before next steps are confirmed.",
+  ],
+  [
+    "Are hotel accommodations available?",
+    "Hotel and travel details may be provided to registered or selected applicants as appropriate.",
+  ],
+  [
+    "Will travel expenses be covered?",
+    "Any production-supported travel details will be communicated directly to selected participants.",
+  ],
+  [
+    "Can family members attend?",
+    "Guest and support-person guidance will be provided to selected applicants when available.",
+  ],
 ];
 
 export default function AuditionPage() {
   return (
-    <main className="cinematic-shell min-h-screen px-5 py-12 text-[#17130e] md:py-20">
-      <div className="mx-auto max-w-6xl">
-        <section className="mb-12 max-w-4xl">
-          <p className="fedup-eyebrow mb-5">Audition Weekend</p>
-          <h1 className="fedup-title text-5xl md:text-7xl">FEDUP Audition Weekend</h1>
-          <p className="fedup-body mt-6 text-lg md:text-xl">
-            Important information for registered applicants attending FEDUP Reality Series auditions in Orlando.
+    <main className="bg-[#080808] text-[#F4EFE6]">
+      <section className="relative overflow-hidden border-b border-white/10 px-5 py-20 md:px-6 md:py-28">
+        <div className="absolute inset-0 opacity-40">
+          <img
+            src="/images/fedup_banner.png"
+            alt="FEDUP audition"
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#080808] via-[#080808]/88 to-[#080808]/45" />
+        <div className="relative mx-auto max-w-7xl">
+          <p className="fedup-kicker">Audition Weekend</p>
+          <h1 className="mt-4 max-w-4xl text-5xl leading-[0.92] md:text-7xl">
+            FEDUP Orlando Audition Hub
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#D8D2C4]">
+            Everything applicants need to know before stepping into the FEDUP
+            casting process in Orlando.
           </p>
-        </section>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link href="/apply" className="fedup-solid-button">
+              Apply Now
+            </Link>
+            <a href="#details" className="fedup-ghost-button">
+              View Details
+            </a>
+          </div>
+        </div>
+      </section>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          {infoSections.map((section) => (
-            <section key={section.title} className="premium-card p-7">
-              <h2 className="mb-5 text-2xl font-black text-[#E5C76B]">{section.title}</h2>
-              <div className="space-y-3 text-[#5c5144]">
-                {section.body.map(([label, value]) => (
-                  <p key={label}>
-                    <strong className="text-[#17130e]">{label}:</strong> {value}
-                  </p>
-                ))}
-              </div>
-            </section>
+      <section id="details" className="mx-auto max-w-7xl px-5 py-16 md:px-6 md:py-24">
+        <div className="grid gap-5 md:grid-cols-4">
+          {overview.map(([label, value]) => (
+            <div key={label} className="bg-[#111] p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-[#AFA79A]">
+                {label}
+              </p>
+              <p className="mt-4 text-2xl leading-tight text-[#F4EFE6]">
+                {value}
+              </p>
+            </div>
           ))}
         </div>
+      </section>
 
-        <section className="premium-card mt-5 p-7">
-          <h2 className="mb-5 text-2xl font-black text-[#E5C76B]">Hotel & Travel</h2>
-          <p className="mb-3 text-lg text-[#17130e]">Embassy Suites by Hilton Orlando International Drive Convention Center</p>
-          <div className="space-y-1 text-[#5c5144]">
-            <p>8978 International Drive</p>
-            <p>Orlando, FL 32819</p>
-            <p>(407) 352-1400</p>
-          </div>
-
-          <div className="mt-6 bg-[#f1e5d2] p-5">
-            <p className="font-bold text-[#E5C76B]">Hotel discount information is provided to registered applicants.</p>
-            <p className="mt-2 text-sm leading-6 text-[#5c5144]">
-              If the Hilton event page does not load, call the hotel directly and ask for the FEDUP July 2026 Auditions room block.
+      <section className="bg-[#0B0B0C] px-5 py-16 md:px-6 md:py-24">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.82fr_1.18fr]">
+          <div>
+            <p className="fedup-kicker">Date and location</p>
+            <h2 className="fedup-editorial-title">Orlando is the room.</h2>
+            <p className="mt-6 text-base leading-7 text-[#AFA79A]">
+              FEDUP auditions are centered in Orlando, Florida on July 11, 2026.
+              Applicants should complete the application first so the casting
+              team can review story details before the event.
             </p>
           </div>
+          <div className="space-y-8">
+            <div className="border-t border-white/10 pt-6">
+              <h3 className="text-3xl text-[#F4EFE6]">Hotel and Travel</h3>
+              <p className="mt-4 text-lg text-[#D8D2C4]">
+                Embassy Suites by Hilton Orlando International Drive Convention
+                Center
+              </p>
+              <div className="mt-4 space-y-1 text-sm leading-6 text-[#AFA79A]">
+                <p>8978 International Drive</p>
+                <p>Orlando, FL 32819</p>
+                <p>(407) 352-1400</p>
+              </div>
+              <p className="mt-5 max-w-2xl text-sm leading-6 text-[#AFA79A]">
+                Hotel information is provided professionally for planning. Any
+                private codes or applicant-specific travel instructions should
+                only be shared through approved casting communication.
+              </p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <a href="tel:+14073521400" className="fedup-solid-button">
+                  Call Hotel
+                </a>
+                <a
+                  href="https://www.hilton.com/en/hotels/orlies-embassy-suites-orlando-international-drive-convention-center/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fedup-ghost-button"
+                >
+                  Hotel Website
+                </a>
+              </div>
+            </div>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <a href="tel:+14073521400" className="premium-button rounded-sm px-6 py-3 text-sm">Call Hotel</a>
-            <a href="https://www.hilton.com/en/hotels/orlies-embassy-suites-orlando-international-drive-convention-center/" target="_blank" rel="noopener noreferrer" className="premium-button-secondary rounded-sm px-6 py-3 text-sm">Hotel Website</a>
-            <a href="https://www.hilton.com/en/attend-my-event/fed-up-july-2026-auditions/" target="_blank" rel="noopener noreferrer" className="rounded-sm border border-[#17130e]/15 px-6 py-3 text-center text-sm font-black uppercase tracking-[0.06em] text-[#5c5144] transition hover:border-[#B9932F] hover:text-[#17130e]">Event Link</a>
-          </div>
-        </section>
-
-        <section className="mt-5 grid gap-5 md:grid-cols-2">
-          <div className="premium-card p-7">
-            <h2 className="mb-5 text-2xl font-black text-[#E5C76B]">What To Bring</h2>
-            <ul className="list-disc space-y-3 pl-5 text-[#5c5144]">
-              <li>Government-issued photo ID</li>
-              <li>Application confirmation</li>
-              <li>Supporting documents related to your story</li>
-              <li>Comfortable attire</li>
-              <li>A positive attitude</li>
-            </ul>
-          </div>
-
-          <div className="premium-card p-7">
-            <h2 className="mb-5 text-2xl font-black text-[#E5C76B]">Frequently Asked Questions</h2>
-            <div className="space-y-4 text-[#5c5144]">
-              <p><strong className="text-[#17130e]">Does applying guarantee an audition?</strong><br />No. Applications are reviewed by the casting team.</p>
-              <p><strong className="text-[#17130e]">Are hotel accommodations available?</strong><br />Discounted accommodations may be available for eligible participants.</p>
-              <p><strong className="text-[#17130e]">Will travel expenses be covered?</strong><br />Additional details will be provided to selected applicants.</p>
-              <p><strong className="text-[#17130e]">Can family members attend?</strong><br />Information will be provided to selected participants.</p>
+            <div className="border-t border-white/10 pt-6">
+              <h3 className="text-3xl text-[#F4EFE6]">What To Bring</h3>
+              <ul className="mt-5 grid gap-3 text-sm leading-6 text-[#D8D2C4]">
+                {bringItems.map((item) => (
+                  <li key={item} className="border-l-2 border-[#7A1F24] pl-4">
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 py-16 md:px-6 md:py-24">
+        <div className="mb-10">
+          <p className="fedup-kicker">FAQ</p>
+          <h2 className="fedup-editorial-title">Before you arrive.</h2>
+        </div>
+        <div className="grid gap-5 md:grid-cols-2">
+          {faqs.map(([question, answer]) => (
+            <div key={question} className="bg-[#101010] p-6">
+              <h3 className="text-xl text-[#F4EFE6]">{question}</h3>
+              <p className="mt-4 text-sm leading-7 text-[#AFA79A]">{answer}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="border-t border-white/10 bg-[#111] px-5 py-16 md:px-6">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="fedup-kicker">Casting CTA</p>
+            <h2 className="mt-3 text-4xl leading-tight text-[#F4EFE6] md:text-5xl">
+              Your story starts with the application.
+            </h2>
+          </div>
+          <Link href="/apply" className="fedup-solid-button">
+            Apply Now
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
