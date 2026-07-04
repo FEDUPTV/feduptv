@@ -7,6 +7,7 @@ const footerLinks = [
   { href: "/audition", label: "Audition" },
   { href: "/resources", label: "Resources" },
   { href: "/sponsors", label: "Sponsors" },
+  { href: "/portal", label: "Portal" },
   { href: "/contact", label: "Contact" },
 ];
 

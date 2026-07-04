@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { env } from "./env";
 
 const PORTAL_COOKIE = "fedup_portal_session";
-const PORTAL_EMERGENCY_DISABLED = true;
+const PORTAL_EMERGENCY_DISABLED = false;
 
 function getPortalPassword() {
   if (!env.portalPassword) {
